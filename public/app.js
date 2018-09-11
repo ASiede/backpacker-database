@@ -49,7 +49,7 @@ const MOCK_TRIPS = {
 		},
 		{
 			"id": "333",
-			"contiributedBy": "Tenzing Norgay",
+			"contributedBy": "Tenzing Norgay",
   			"name": "Waldo Lake",
   			"map": {},
   			"location": {
@@ -65,7 +65,7 @@ const MOCK_TRIPS = {
 		},
 		{
 			"id": "444",
-			"contiributedBy": "Lewis Clark",
+			"contributedBy": "Lewis Clark",
   			"name": "Final Stretch of PCT",
   			"map": {},
   			"location": {
@@ -73,9 +73,9 @@ const MOCK_TRIPS = {
   				"state": "WA"
   				},
   			"nights": 7,
-  			"distance": 80,
+  			"totalMiles": 80,
   			"shortDescription": "Climb peaks and enjoy the PNW in all it's glory",
-  			"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  			"longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
   			"features": [],
   			"comments": []
 		}
@@ -150,41 +150,37 @@ function getTrips(callback) {
 
 function displayTripsHTML(trip) {
   return `
-  <p>${trip.name}</p>
+  <p class='trip-name'>${trip.name}</p>
+  <p>${trip.location.state}</p>
   `
+}
+
+
+
+let trips = {}
+
+function displayTrips(data) {
+  const results = data.trips.map((trip) => displayTripsHTML(trip));
+  
+  $('.trips').append(results);
+  trips = data;
+  console.log(trips);
+
 }
 
 function displayComments(comment) {
   return `<p class="comments" hidden>${comment.content}</p>`
 }
 
-function displayTrips(data) {
-  const results = data.trips.map((trip) => displayTripsHTML(trip));
-  const comments = data.trips[0].comments.map(comment => displayComments(comment)).join('');
-  $('.trips').append(results);
-  $('.trip-details-results').html(`
-    <h3>${data.trips[0].name}</h3>
-      <p>${data.trips[0].shortDescription}</p>
-      <p>${data.trips[0].longDescription}</p>
-      <p>Contributed by: ${data.trips[0].contributedBy}</p>
-      <p>${data.trips[0].location.longAndLat}</p>
-      <p>${data.trips[0].nights} night(s)</p>
-      <p>${data.trips[0].totalMiles} miles</p>
-      <p>Features: ${data.trips[0].features}</p>
-    <h2 class="comments" hidden>Comments</h2>  
-      <p class="comments" hidden>${comments}</p>
-      `);
-}
-
 function handleClickForComments(data) {
-  $('.trip-details').on('click', '.show-comments', function(data) {
+  $('body').on('click', '.show-comments', function(data) {
     $('.comments').prop('hidden', false);
     $('.show-comments').replaceWith(`<button type="click" class="hide-comments">Hide Comments</button>`);
   });
 }
 
 function handleClickToHideComments() {
-  $('.trip-details').on('click', '.hide-comments', function(event) {
+  $('body').on('click', '.hide-comments', function(event) {
     event.preventDefault();
     $('.comments').prop('hidden', true);
     $('.hide-comments').replaceWith(`<button class="show-comments" type='click'>Show Comments</button>`);
@@ -194,6 +190,49 @@ function handleClickToHideComments() {
 
 function getAndDisplayTrips() {
   getTrips(displayTrips);
+}
+
+function displayTripDetails(selectedTripName) {
+    function matchName(obj) {
+      return obj.name === selectedTripName;
+    }
+    let selectedTrip = trips.trips.find(matchName);
+    const comments = selectedTrip.comments.map(comment => displayComments(comment)).join('');
+    
+    console.log(selectedTrip);
+    $('.trips').replaceWith(`
+      <section class="trip-details">
+        <h2>One Trip Details</h2>
+          <h3>${selectedTrip.name}</h3>
+          <p>${selectedTrip.shortDescription}</p>
+          <p>${selectedTrip.longDescription}</p>
+          <p>Contributed by: ${selectedTrip.contributedBy}</p>
+          <p>${selectedTrip.location.longAndLat}</p>
+          <p>${selectedTrip.nights} night(s)</p>
+          <p>${selectedTrip.totalMiles} miles</p>
+          <p>Features: ${selectedTrip.features}</p>
+        <h2 class="comments" hidden>Comments</h2>  
+          <p class="comments" hidden>${comments}</p>
+      </section>
+      <button class="show-comments" type='click'>Show Comments</button>
+      `);
+}
+
+function handleClickForTripDetails() {
+  $('.trips').on('click', '.trip-name', function() {
+    console.log('click click');
+    let selectedTripName = $(this).text()
+    console.log(selectedTripName);
+    displayTripDetails(selectedTripName);
+
+  })
+}
+
+//Searching trips
+function handleSearchTripsButton() {
+  $('.search-trips').on('click', function() {
+    $('form').prop('hidden', false);
+  })
 }
 
 //    Get users
@@ -244,12 +283,19 @@ function getAndDisplayProfile() {
   getUserProfile(displayUserProfile);
 }
 
-$(getAndDisplayProfile);
-$(getAndDisplayTrips);
-$(getAndDisplayUsers);
-$(handleClickForComments);
-$(handleClickToHideComments);
 
+
+function init () {
+  $(getAndDisplayProfile);
+  $(getAndDisplayTrips);
+  $(getAndDisplayUsers);
+  $(handleClickForComments);
+  $(handleClickToHideComments);
+  $(handleClickForTripDetails);
+  $(handleSearchTripsButton);
+}
+
+$(init)
 
 
 

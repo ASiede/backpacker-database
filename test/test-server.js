@@ -184,6 +184,12 @@ describe('Trips API resource', function() {
         });
     });
   });
+//PUT endpoint
+
+
+
+
+
 
   });
 });
