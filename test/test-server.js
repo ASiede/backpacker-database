@@ -13,38 +13,49 @@ const {TEST_DATABASE_URL} = require('../config');
 
 chai.use(chaiHttp);
 
-// function seedTripData() {
-//   console.info('seeding trip data');
-//   const seedData = [];
+//Seeding trip data
+function seedTripData() {
+  console.info('seeding trip data');
+  const seedData = [];
 
-//   for (let i=1; i<=4; i++) {
-//     seedData.push(generateTripData());
-//   }
-//   // this will return a promise
-//   return Trip.insertMany(seedData);
-// }
+  for (let i=1; i<=1; i++) {
+    seedData.push(generateTripData());
+  }
+  // this will return a promise
+  return Trip.insertMany(seedData);
+}
 
-// // generate an object represnting a restaurant.
-// // can be used to generate seed data for db
-// // or request.body data
-// function generateTripData() {
-//   Trip.find()
-//   	.then(function() {
-//   	return {
-//     name: Trip.name()
-// 	}
-//     // // userContributed: faker.name.firstName(),
-//     // location: {
-//     //   longAndLat: faker.random.number(),
-//     //   street: faker.address.state(),
-//     // },
-//     // nights: faker.random.number(),
-//     // totalMileage: faker.random.number(),
-//     // shortDescription: faker.lorem.sentence(),
-//     // longDesctiption: faker.lorem.paragraph(),
-//     // features:[]
-//   })
-// }
+// generate an object represnting a restaurant.
+// can be used to generate seed data for db
+// or request.body data
+function generateTripData() {
+  	return {
+      // "userContributed": { "type": "mongoose.Schema.Types.ObjectId", "ref": "Author" },
+      "name": "Bull of the woods wilderness with swimming pool",
+      "location": {
+        "longAndLat": "45.5122° N, 122.6587° W",
+        "state": "OR"
+      },
+      "nights": "1",
+      "totalMileage": "4.7",
+      "shortDescription": "A short hike in to a camp spot on the top of a rocky ledge overlooking a beautiful swim spot",
+      "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "difficulty": "easy",
+      "features": ["swimming spot", "old-growth trees", "wilderness"],
+      "comments": []
+    }
+}
+    // // userContributed: faker.name.firstName(),
+    // location: {
+    //   longAndLat: faker.random.number(),
+    //   street: faker.address.state(),
+    // },
+    // nights: faker.random.number(),
+    // totalMileage: faker.random.number(),
+    // shortDescription: faker.lorem.sentence(),
+    // longDesctiption: faker.lorem.paragraph(),
+    // features:[]
+
 
 function tearDownDb() {
   console.warn('Deleting database');
@@ -57,9 +68,9 @@ describe('Trips API resource', function() {
     return runServer(TEST_DATABASE_URL);
   });
 
-  // beforeEach(function() {
-  //   return seedTripData();
-  // });
+  beforeEach(function() {
+    return seedTripData();
+  });
 
   // afterEach(function() {
   //   return tearDownDb();
@@ -70,18 +81,16 @@ describe('Trips API resource', function() {
   });
 
 
-// Get endpoint
+  // Get endpoint
   describe('GET endpoint', function() {
 
-    it('should return all existing restaurants', function() {
+    it('should return all existing trips', function() {
       let res;
       return chai.request(app)
         .get('/trips')
         .then(function(_res) {
-          // so subsequent .then blocks can access response object
           res = _res;
           expect(res).to.have.status(200);
-          // otherwise our db seeding didn't work
           expect(res.body.trips).to.have.lengthOf.at.least(1);
           return Trip.count();
         })
@@ -129,22 +138,24 @@ describe('Trips API resource', function() {
 
         });
     });
+  });
 
-    describe('POST endpoint', function() {
+  describe('POST endpoint', function() {
+
     it('should add a new trip', function() {
 
       const newTrip = {
-      	"name": "Super cool Trip",
-		"location": {
-			"longAndLat": "45.5122° N, 122.6587° W",
-			"state": "CA"
-		},
-		"nights": "3",
-		"totalMileage": "9",
-		"shortDescription": "Fun trip",
-		"longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-		"difficulty": "easy",
-		"features": ["wildflowers"]
+        "name": "Super cool Trip",
+  	    "location": {
+  		  "longAndLat": "45.5122° N, 122.6587° W",
+  		  "state": "CA"
+    		},
+    		"nights": "3",
+    		"totalMileage": "9",
+    		"shortDescription": "Fun trip",
+    		"longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    		"difficulty": "easy",
+    		"features": ["wildflowers"]
       };
     
       return chai.request(app)
@@ -185,7 +196,65 @@ describe('Trips API resource', function() {
     });
   });
 
+  // put test not working
+  describe('PUT endpoint', function() {
+    // strategy:
+    //  1. Get an existing restaurant from db
+    //  2. Make a PUT request to update that restaurant
+    //  3. Prove restaurant returned by request contains data we sent
+    //  4. Prove restaurant in db is correctly updated
+    it('should update fields you send over', function() {
+      const updateData = {
+        name: 'Updated name',
+        difficulty: 'really difficult'
+      };
+
+      return chai.request(app)
+        .get('/trips')
+        .then(function(res) {
+          updateData.id = res.body.trips[0].id;
+          return chai.request(app)
+            .put(`/trips/${res.body.trips[0].id}`)
+            .send(updateData);
+        })
+
+        .then(function(res) {
+          expect(res).to.have.status(204);
+
+          return Trip.findById(updateData.id);
+        })
+        .then(function(trip) {
+          expect(trip.name).to.equal(updateData.name);
+          expect(trip.difficulty).to.equal(updateData.difficulty);
+        });
+    });
+
   });
+
+
+  describe('DELETE endpoint', function() {
+
+    it('delete a trip by id', function() {
+
+      let trip;
+
+      return Trip
+        .findOne()
+        .then(function(_trip) {
+          trip = _trip;
+          return chai.request(app).delete(`/trip/${trip.id}`);
+        })
+        .then(function(res) {
+          expect(res).to.have.status(204);
+          return Trip.findById(trip.id);
+        })
+        .then(function(_trip) {
+          expect(_trip).to.be.null;
+        });
+    });
+  });
+
+
 });
 
 describe('initial page', function() {
@@ -193,7 +262,9 @@ describe('initial page', function() {
 		return chai.request(app)
 			.get('/', function(res) {
 				expect(res).to.have.status(200);
-			});
+		});
+
 	});
 
 });
+

@@ -56,23 +56,70 @@ app.post('/trips', (req, res) => {
     }
   }
 
-  Trip.create({
-	name: req.body.name,
-	userContributed: req.body.userName,
-	location: req.body.location,
-	nights: req.body.nights,
-	totalMileage: req.body.totalMileage,
-	shortDescription: req.body.shortDescription,
-	longDescription: req.body.longDescription,
-	difficulty: req.body.difficulty,
-	features: req.body.features
+  User.findById(req.body.user._id)
+    .then( user => { 
+      if (user) {
+        Trip.create({
+        	name: req.body.name,
+        	userContributed: req.body.userName,
+        	location: req.body.location,
+        	nights: req.body.nights,
+        	totalMileage: req.body.totalMileage,
+        	shortDescription: req.body.shortDescription,
+        	longDescription: req.body.longDescription,
+        	difficulty: req.body.difficulty,
+        	features: req.body.features
+        })
+        .then(trip => res.status(201).json(trip.serialize()))
+        .catch(err => {
+          console.error(err);
+          res.status(500).json({ message: 'Internal server error' });
+        });
+      } else {
+          const message = `User not found`;
+          console.error(message);
+          return res.status(500).send(message);
+        }    
     })
-    .then(trip => res.status(201).json(trip.serialize()))
     .catch(err => {
       console.error(err);
-      res.status(500).json({ message: 'Internal server error' });
+      res.status(500).json({ error: 'Internal server errorrrrr' });
     });
 });
+
+//Put and update trip
+app.put('/trips/:id', (req, res) => {
+  // ensure that the id in the request path and the one in request body match
+  if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+    const message = (
+      `Request path id (${req.params.id}) and request body id ` +
+      `(${req.body.id}) must match`);
+    console.error(message);
+    return res.status(400).json({ message: message });
+  }
+
+  const toUpdate = {};
+  const updateableFields = ['name', 'location', 'nights', 'totalMileage', 'shortDescription', 'longDescription', 'difficulty', 'features'];
+
+  updateableFields.forEach(field => {
+    if (field in req.body) {
+      toUpdate[field] = req.body[field];
+    }
+  });
+
+  Trip.findByIdAndUpdate(req.params.id, { $set: toUpdate })
+    .then(trip => res.status(204).end())
+    .catch(err => res.status(500).json({ message: 'Internal server error' }));
+});
+
+//DELETE endpoint
+app.delete('/trip/:id', (req, res) => {
+  Trip
+    .findByIdAndRemove(req.params.id)
+    .then(trip => res.status(204).end())
+    .catch(err => res.status(500).json({ message: 'Internal server error' }));
+});
+
 
 // Get users
 app.get("/users", (req, res) => {
