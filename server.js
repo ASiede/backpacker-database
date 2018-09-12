@@ -20,7 +20,7 @@ app.use(morgan('common'));
 //Get request to return posts
 app.get("/trips", (req, res) => {
     Trip.find()
-    // .populate('user')
+    .populate('userContributed')
     .then(trips => {
     	res.json({
     		trips: trips.map(trip => trip.serialize())

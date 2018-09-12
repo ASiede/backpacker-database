@@ -39,17 +39,17 @@ const userSchema = mongoose.Schema({
 });
 
 //prehook for username
-tripSchema.pre('find', function(next) {
-	this.populate('user');
-	next();
-});
+// tripSchema.pre('find', function(next) {
+// 	this.populate('userContributed');
+// 	next();
+// });
 
 
 tripSchema.methods.serialize = function() {
 	return {
 		id: this._id,
 		name: this.name,
-		userContributed: this.userName,
+		userContributed: this.userContributed,
 		location: this.location,
 		nights: this.nights,
 		totalMileage: this.totalMileage,
@@ -70,8 +70,8 @@ userSchema.methods.serialize = function() {
 		tripsPosted: this.tripsPosted,
 	};	
 };
-const Trip = mongoose.model("Trips", tripSchema);
-const User = mongoose.model("Users", userSchema);
-const Comment = mongoose.model("Comments", commentSchema);
+const Trip = mongoose.model("Trip", tripSchema);
+const User = mongoose.model("User", userSchema);
+const Comment = mongoose.model("Comment", commentSchema);
 
 module.exports = { Trip, User, Comment};
