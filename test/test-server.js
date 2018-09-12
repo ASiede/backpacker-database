@@ -13,38 +13,38 @@ const {TEST_DATABASE_URL} = require('../config');
 
 chai.use(chaiHttp);
 
-//Seeding trip data
-function seedTripData() {
-  console.info('seeding trip data');
-  const seedData = [];
+// //Seeding trip data
+// function seedTripData() {
+//   console.info('seeding trip data');
+//   const seedData = [];
 
-  for (let i=1; i<=1; i++) {
-    seedData.push(generateTripData());
-  }
-  // this will return a promise
-  return Trip.insertMany(seedData);
-}
+//   for (let i=1; i<=1; i++) {
+//     seedData.push(generateTripData());
+//   }
+//   // this will return a promise
+//   return Trip.insertMany(seedData);
+// }
 
 // generate an object represnting a restaurant.
 // can be used to generate seed data for db
 // or request.body data
-function generateTripData() {
-  	return {
+// function generateTripData() {
+//   	return {
       // "userContributed": { "type": "mongoose.Schema.Types.ObjectId", "ref": "Author" },
-      "name": "Bull of the woods wilderness with swimming pool",
-      "location": {
-        "longAndLat": "45.5122° N, 122.6587° W",
-        "state": "OR"
-      },
-      "nights": "1",
-      "totalMileage": "4.7",
-      "shortDescription": "A short hike in to a camp spot on the top of a rocky ledge overlooking a beautiful swim spot",
-      "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      "difficulty": "easy",
-      "features": ["swimming spot", "old-growth trees", "wilderness"],
-      "comments": []
-    }
-}
+    //   "name": "Bull of the woods wilderness with swimming pool",
+    //   "location": {
+    //     "longAndLat": "45.5122° N, 122.6587° W",
+    //     "state": "OR"
+    //   },
+    //   "nights": "1",
+    //   "totalMileage": "4.7",
+    //   "shortDescription": "A short hike in to a camp spot on the top of a rocky ledge overlooking a beautiful swim spot",
+    //   "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    //   "difficulty": "easy",
+    //   "features": ["swimming spot", "old-growth trees", "wilderness"],
+    //   "comments": []
+    // }
+// }
     // // userContributed: faker.name.firstName(),
     // location: {
     //   longAndLat: faker.random.number(),
@@ -57,10 +57,10 @@ function generateTripData() {
     // features:[]
 
 
-function tearDownDb() {
-  console.warn('Deleting database');
-  return mongoose.connection.dropDatabase();
-}
+// function tearDownDb() {
+//   console.warn('Deleting database');
+//   return mongoose.connection.dropDatabase();
+// }
 
 describe('Trips API resource', function() {
 
@@ -68,9 +68,9 @@ describe('Trips API resource', function() {
     return runServer(TEST_DATABASE_URL);
   });
 
-  beforeEach(function() {
-    return seedTripData();
-  });
+  // beforeEach(function() {
+  //   return seedTripData();
+  // });
 
   // afterEach(function() {
   //   return tearDownDb();

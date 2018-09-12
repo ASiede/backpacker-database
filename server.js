@@ -32,7 +32,7 @@ app.get("/trips", (req, res) => {
     });
 });
 
-//Get on by 
+//Get trip by id
 app.get('/trips/:id', (req, res) => {
   	Trip.findById(req.params.id)
     	.then(trip => res.json(trip.serialize()))
@@ -46,7 +46,7 @@ app.get('/trips/:id', (req, res) => {
 // Post trip
 app.post('/trips', (req, res) => {
 
-  const requiredFields = ['name', 'location', 'nights', 'totalMileage', 'longDescription'];
+  const requiredFields = ['userContributed','name', 'location', 'nights', 'totalMileage', 'longDescription'];
   for (let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
@@ -56,19 +56,19 @@ app.post('/trips', (req, res) => {
     }
   }
 
-  User.findById(req.body.user._id)
+  User.findById(req.body.userContributed._id)
     .then( user => { 
       if (user) {
         Trip.create({
         	name: req.body.name,
-        	userContributed: req.body.userName,
+        	userContributed: user,
         	location: req.body.location,
         	nights: req.body.nights,
         	totalMileage: req.body.totalMileage,
         	shortDescription: req.body.shortDescription,
         	longDescription: req.body.longDescription,
         	difficulty: req.body.difficulty,
-        	features: req.body.features
+        	features: req.body.features,
         })
         .then(trip => res.status(201).json(trip.serialize()))
         .catch(err => {
@@ -87,7 +87,7 @@ app.post('/trips', (req, res) => {
     });
 });
 
-//Put and update trip
+//Put to update trip
 app.put('/trips/:id', (req, res) => {
   // ensure that the id in the request path and the one in request body match
   if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
@@ -113,13 +113,57 @@ app.put('/trips/:id', (req, res) => {
 });
 
 //DELETE endpoint
-app.delete('/trip/:id', (req, res) => {
+app.delete('/trips/:id', (req, res) => {
+  //check to make sure paths match??
   Trip
     .findByIdAndRemove(req.params.id)
     .then(trip => res.status(204).end())
     .catch(err => res.status(500).json({ message: 'Internal server error' }));
 });
 
+
+//Post a comment
+app.post('/comments', (req, res) => {
+  const requiredFields = ['content', 'tripId', 'userContributed'];
+  for (let i = 0; i < requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.body)) {
+      const message = `Missing \`${field}\` in request body`;
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
+  User.findById(req.body.user._id)
+    .then( user => { 
+      if (user) {
+        // Comment.create({
+        //   name: req.body.name,
+        //   tripId: req.body.tripId,
+        //   userContributed: req.body.userName,
+        // })
+        Trip.findOne({
+          _id: req.body.tripId
+        })
+        .then(trip => {
+          res.status(201);
+          trip.comments.push({content: `${req.body.content}`});
+          trip.save();
+        })
+        .catch(err => {
+          console.error(err);
+          res.status(500).json({ message: 'Internal server error' });
+        });
+      } else {
+          const message = `User not found`;
+          console.error(message);
+          return res.status(500).send(message);
+        }    
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Internal server errorrrrr' });
+    });
+});
 
 // Get users
 app.get("/users", (req, res) => {
