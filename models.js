@@ -27,6 +27,7 @@ const tripSchema = mongoose.Schema({
   longDescription:'string',
   difficulty: 'string',
   features: ['string'],
+  //comments are coming out weird when empty
   comments: [commentSchema]
 });
 
@@ -39,24 +40,26 @@ const userSchema = mongoose.Schema({
 });
 
 //prehook for username
-// tripSchema.pre('find', function(next) {
-// 	this.populate('userContributed');
-// 	next();
-// });
+tripSchema.pre('find', function(next) {
+	this.populate('userContributed');
+	next();
+});
+
 
 
 tripSchema.methods.serialize = function() {
 	return {
 		id: this._id,
 		name: this.name,
-		userContributed: this.userContributed,
+		userContributed: this.userContributed.userName,
 		location: this.location,
 		nights: this.nights,
 		totalMileage: this.totalMileage,
 		shortDescription: this.shortDescription,
 		longDescription: this.longDescription,
 		difficulty: this.difficulty,
-		features: this.features
+		features: this.features,
+    comments: [commentSchema]
 	};	
 };
 
@@ -70,6 +73,17 @@ userSchema.methods.serialize = function() {
 		tripsPosted: this.tripsPosted,
 	};	
 };
+
+commentSchema.methods.serialize = function() {
+  return {
+    id: this._id,
+    tripId: this.tripId,
+    userContributed: this.userContributed.userName,
+    content: this.content
+  }
+};
+
+
 const Trip = mongoose.model("Trip", tripSchema);
 const User = mongoose.model("User", userSchema);
 const Comment = mongoose.model("Comment", commentSchema);

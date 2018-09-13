@@ -15,7 +15,11 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(morgan('common'));
 
-
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 //Get request to return posts
 app.get("/trips", (req, res) => {
@@ -32,7 +36,7 @@ app.get("/trips", (req, res) => {
     });
 });
 
-//Get on by 
+//Get trip by id
 app.get('/trips/:id', (req, res) => {
   	Trip.findById(req.params.id)
     	.then(trip => res.json(trip.serialize()))
@@ -46,7 +50,7 @@ app.get('/trips/:id', (req, res) => {
 // Post trip
 app.post('/trips', (req, res) => {
 
-  const requiredFields = ['name', 'location', 'nights', 'totalMileage', 'longDescription'];
+  const requiredFields = ['userContributed','name', 'location', 'nights', 'totalMileage', 'longDescription'];
   for (let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
@@ -56,21 +60,116 @@ app.post('/trips', (req, res) => {
     }
   }
 
-  Trip.create({
-	name: req.body.name,
-	userContributed: req.body.userName,
-	location: req.body.location,
-	nights: req.body.nights,
-	totalMileage: req.body.totalMileage,
-	shortDescription: req.body.shortDescription,
-	longDescription: req.body.longDescription,
-	difficulty: req.body.difficulty,
-	features: req.body.features
+  User.findById(req.body.userContributed._id)
+    .then( user => { 
+      if (user) {
+        Trip.create({
+        	name: req.body.name,
+        	userContributed: user,
+        	location: req.body.location,
+        	nights: req.body.nights,
+        	totalMileage: req.body.totalMileage,
+        	shortDescription: req.body.shortDescription,
+        	longDescription: req.body.longDescription,
+        	difficulty: req.body.difficulty,
+        	features: req.body.features,
+        })
+        .then(trip => res.status(201).json(trip.serialize()))
+        .catch(err => {
+          console.error(err);
+          res.status(500).json({ message: 'Internal server error' });
+        });
+      } else {
+          const message = `User not found`;
+          console.error(message);
+          return res.status(500).send(message);
+        }    
     })
-    .then(trip => res.status(201).json(trip.serialize()))
     .catch(err => {
       console.error(err);
-      res.status(500).json({ message: 'Internal server error' });
+      res.status(500).json({ error: 'Internal server errorrrrr' });
+    });
+});
+
+//Put to update trip
+app.put('/trips/:id', (req, res) => {
+  // ensure that the id in the request path and the one in request body match
+  if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+    const message = (
+      `Request path id (${req.params.id}) and request body id ` +
+      `(${req.body.id}) must match`);
+    console.error(message);
+    return res.status(400).json({ message: message });
+  }
+
+  const toUpdate = {};
+  const updateableFields = ['name', 'location', 'nights', 'totalMileage', 'shortDescription', 'longDescription', 'difficulty', 'features'];
+
+  updateableFields.forEach(field => {
+    if (field in req.body) {
+      toUpdate[field] = req.body[field];
+    }
+  });
+
+  Trip.findByIdAndUpdate(req.params.id, { $set: toUpdate })
+    .then(trip => res.status(204).end())
+    .catch(err => res.status(500).json({ message: 'Internal server error' }));
+});
+
+//DELETE endpoint
+app.delete('/trips/:id', (req, res) => {
+  //check to make sure paths match??
+  Trip
+    .findByIdAndRemove(req.params.id)
+    .then(trip => res.status(204).end())
+    .catch(err => res.status(500).json({ message: 'Internal server error' }));
+});
+
+
+//Post a comment
+app.post('/comments', (req, res) => {
+  const requiredFields = ['content', 'tripId', 'userContributed'];
+  for (let i = 0; i < requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.body)) {
+      const message = `Missing \`${field}\` in request body`;
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
+  User.findById(req.body.userContributed)
+    .then( user => { 
+      if (user) {
+          // Comment.create({
+          // content: req.body.content,
+          // tripId: req.body.tripId,
+          // userContributed: req.body.userContributed,
+          // })
+        Trip.findOne({
+          _id: req.body.tripId
+        })
+        .then(trip => {
+          // res.status(201);
+          trip.comments.push({
+            content: `${req.body.content}`,
+            // tripId: `${req.body.tripId}`,
+            userContributed: `${req.body.userContributed}`
+          });
+          trip.save();
+        })
+        .catch(err => {
+          console.error(err);
+          res.status(500).json({ message: 'Internal server error' });
+        });
+      } else {
+          const message = `User not found`;
+          console.error(message);
+          return res.status(500).send(message);
+        }    
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Internal server error' });
     });
 });
 
@@ -102,7 +201,6 @@ app.put('/trips/:id', (req, res) => {
 // Get users
 app.get("/users", (req, res) => {
     User.find()
-    // .populate('userContributed')
     .then(users => {
     	res.json({
     		users: users.map(user => user.serialize())
@@ -113,6 +211,48 @@ app.get("/users", (req, res) => {
       res.status(500).json({ message: "Internal server error" });
     });
 });
+
+// Post a new user
+
+app.post('/users', (req, res) => {
+  const requiredFields = ['userName','firstName', 'lastName', 'password'];
+  for (let i = 0; i < requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.body)) {
+      const message = `Missing \`${field}\` in request body`;
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
+  
+  User.create({
+    // check to make sure username isn't taken
+    userName: req.body.userName,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    // hashing password etc
+    password: req.body.password,
+  })
+  .then(user => res.status(201).json(user.serialize()))
+  .catch(err => {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  });   
+});
+
+// Get user by ID
+
+app.get('/users/:id', (req, res) => {
+    User.findById(req.params.id)
+      .then(user => res.json(user.serialize()))
+      //Do I need to check that id and route is the same
+      .catch(err => {
+          console.error(err);
+          res.status(500).json({ message: 'Internal server error' });
+    });
+});
+
+// Delete Comment
 
 let server;
 
