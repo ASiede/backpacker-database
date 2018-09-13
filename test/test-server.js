@@ -11,6 +11,10 @@ const {Trip, User, Comment} = require('../models');
 const {app, runServer, closeServer} = require('../server');
 const {TEST_DATABASE_URL} = require('../config');
 
+const seedTrips = require('../db/trips');
+const seedUsers = require('../db/users');
+const seedComments = require('../db/comments');
+
 chai.use(chaiHttp);
 
 // //Seeding trip data
@@ -57,10 +61,10 @@ chai.use(chaiHttp);
     // features:[]
 
 
-// function tearDownDb() {
-//   console.warn('Deleting database');
-//   return mongoose.connection.dropDatabase();
-// }
+function tearDownDb() {
+  console.warn('Deleting database');
+  return mongoose.connection.dropDatabase();
+}
 
 describe('Trips API resource', function() {
 
@@ -68,13 +72,17 @@ describe('Trips API resource', function() {
     return runServer(TEST_DATABASE_URL);
   });
 
-  // beforeEach(function() {
-  //   return seedTripData();
-  // });
+  beforeEach(function() {
+    return Promise.all([
+      Trip.insertMany(seedTrips),
+      User.insertMany(seedUsers),
+      Comment.insertMany(seedComments),
+      ]);
+  });
 
-  // afterEach(function() {
-  //   return tearDownDb();
-  // });
+  afterEach(function() {
+    return tearDownDb();
+  });
 
   after(function() {
     return closeServer();

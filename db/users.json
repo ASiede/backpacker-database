@@ -1,0 +1,8 @@
+{
+	"_id": {"$oid": "5b958af16bfe8fba53fb5fc6"},
+	"userName": "tnorgay",
+	"firstName": "Tenzing",
+	"lastName": "Norgay",
+	"password": "everest",
+	"tripsPosted": []
+}
