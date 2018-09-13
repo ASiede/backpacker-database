@@ -46,6 +46,7 @@ tripSchema.pre('find', function(next) {
 });
 
 
+
 tripSchema.methods.serialize = function() {
 	return {
 		id: this._id,
@@ -81,6 +82,7 @@ commentSchema.methods.serialize = function() {
     content: this.content
   }
 };
+
 
 const Trip = mongoose.model("Trip", tripSchema);
 const User = mongoose.model("User", userSchema);

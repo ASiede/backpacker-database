@@ -195,6 +195,12 @@ describe('Trips API resource', function() {
         });
     });
   });
+//PUT endpoint
+
+
+
+
+
 
   // put test not working
   describe('PUT endpoint', function() {
