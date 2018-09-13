@@ -145,7 +145,8 @@ const MOCK_COMMENTS = {
 //    Getting Trips and comments
 
 function getTrips(callback) {
-  setTimeout(function(){ callback(MOCK_TRIPS)}, 100);
+  // setTimeout(function(){ callback(MOCK_TRIPS)}, 100);
+  $.getJSON('http://localhost:8080/trips', callback);
 }
 
 function displayTripsHTML(trip) {

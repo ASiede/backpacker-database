@@ -15,7 +15,11 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(morgan('common'));
 
-
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 //Get request to return posts
 app.get("/trips", (req, res) => {
@@ -133,20 +137,24 @@ app.post('/comments', (req, res) => {
       return res.status(400).send(message);
     }
   }
-  User.findById(req.body.user._id)
+  User.findById(req.body.userContributed)
     .then( user => { 
       if (user) {
-        // Comment.create({
-        //   name: req.body.name,
-        //   tripId: req.body.tripId,
-        //   userContributed: req.body.userName,
-        // })
+          // Comment.create({
+          // content: req.body.content,
+          // tripId: req.body.tripId,
+          // userContributed: req.body.userContributed,
+          // })
         Trip.findOne({
           _id: req.body.tripId
         })
         .then(trip => {
-          res.status(201);
-          trip.comments.push({content: `${req.body.content}`});
+          // res.status(201);
+          trip.comments.push({
+            content: `${req.body.content}`,
+            // tripId: `${req.body.tripId}`,
+            userContributed: `${req.body.userContributed}`
+          });
           trip.save();
         })
         .catch(err => {
@@ -161,14 +169,13 @@ app.post('/comments', (req, res) => {
     })
     .catch(err => {
       console.error(err);
-      res.status(500).json({ error: 'Internal server errorrrrr' });
+      res.status(500).json({ error: 'Internal server error' });
     });
 });
 
 // Get users
 app.get("/users", (req, res) => {
     User.find()
-    // .populate('userContributed')
     .then(users => {
     	res.json({
     		users: users.map(user => user.serialize())
@@ -179,6 +186,48 @@ app.get("/users", (req, res) => {
       res.status(500).json({ message: "Internal server error" });
     });
 });
+
+// Post a new user
+
+app.post('/users', (req, res) => {
+  const requiredFields = ['userName','firstName', 'lastName', 'password'];
+  for (let i = 0; i < requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.body)) {
+      const message = `Missing \`${field}\` in request body`;
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
+  
+  User.create({
+    // check to make sure username isn't taken
+    userName: req.body.userName,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    // hashing password etc
+    password: req.body.password,
+  })
+  .then(user => res.status(201).json(user.serialize()))
+  .catch(err => {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  });   
+});
+
+// Get user by ID
+
+app.get('/users/:id', (req, res) => {
+    User.findById(req.params.id)
+      .then(user => res.json(user.serialize()))
+      //Do I need to check that id and route is the same
+      .catch(err => {
+          console.error(err);
+          res.status(500).json({ message: 'Internal server error' });
+    });
+});
+
+// Delete Comment
 
 let server;
 
