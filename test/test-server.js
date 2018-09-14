@@ -17,49 +17,13 @@ const seedComments = require('../db/comments');
 
 chai.use(chaiHttp);
 
-// //Seeding trip data
-// function seedTripData() {
-//   console.info('seeding trip data');
-//   const seedData = [];
-
-//   for (let i=1; i<=1; i++) {
-//     seedData.push(generateTripData());
-//   }
-//   // this will return a promise
-//   return Trip.insertMany(seedData);
-// }
-
-// generate an object represnting a restaurant.
-// can be used to generate seed data for db
-// or request.body data
-// function generateTripData() {
-//   	return {
-      // "userContributed": { "type": "mongoose.Schema.Types.ObjectId", "ref": "Author" },
-    //   "name": "Bull of the woods wilderness with swimming pool",
-    //   "location": {
-    //     "longAndLat": "45.5122° N, 122.6587° W",
-    //     "state": "OR"
-    //   },
-    //   "nights": "1",
-    //   "totalMileage": "4.7",
-    //   "shortDescription": "A short hike in to a camp spot on the top of a rocky ledge overlooking a beautiful swim spot",
-    //   "longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    //   "difficulty": "easy",
-    //   "features": ["swimming spot", "old-growth trees", "wilderness"],
-    //   "comments": []
-    // }
-// }
-    // // userContributed: faker.name.firstName(),
-    // location: {
-    //   longAndLat: faker.random.number(),
-    //   street: faker.address.state(),
-    // },
-    // nights: faker.random.number(),
-    // totalMileage: faker.random.number(),
-    // shortDescription: faker.lorem.sentence(),
-    // longDesctiption: faker.lorem.paragraph(),
-    // features:[]
-
+//Seeding trip data
+function seedTripData() {
+  console.info('seeding trip data');
+  return Trip.insertMany(seedTrips);
+  return User.insertMany(seedUsers);
+  return Comment.insertMany(seedComments)
+}
 
 function tearDownDb() {
   console.warn('Deleting database');
@@ -73,11 +37,7 @@ describe('Trips API resource', function() {
   });
 
   beforeEach(function() {
-    return Promise.all([
-      Trip.insertMany(seedTrips),
-      User.insertMany(seedUsers),
-      Comment.insertMany(seedComments),
-      ]);
+    return seedTripData();
   });
 
   afterEach(function() {
@@ -153,10 +113,11 @@ describe('Trips API resource', function() {
     it('should add a new trip', function() {
 
       const newTrip = {
+        "userContributed": "5b958af16bfe8fba53fb5fc6",
         "name": "Super cool Trip",
   	    "location": {
-  		  "longAndLat": "45.5122° N, 122.6587° W",
-  		  "state": "CA"
+    		  "longAndLat": "45.5122° N, 122.6587° W",
+    		  "state": "CA"
     		},
     		"nights": "3",
     		"totalMileage": "9",
@@ -256,7 +217,7 @@ describe('Trips API resource', function() {
         .findOne()
         .then(function(_trip) {
           trip = _trip;
-          return chai.request(app).delete(`/trip/${trip.id}`);
+          return chai.request(app).delete(`/trips/${trip.id}`);
         })
         .then(function(res) {
           expect(res).to.have.status(204);

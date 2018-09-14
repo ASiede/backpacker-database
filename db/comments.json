@@ -1,6 +1,6 @@
 {
-	"_id": {"$oid": "5b9845ed6bfe8fba53fb732f"},
-	"userContributed": {"$oid": "5b958af16bfe8fba53fb5fc6"},
+	"_id": "5b9845ed6bfe8fba53fb732f",
+	"userContributed": "5b958af16bfe8fba53fb5fc6",
 	"dateAdded": "April 4th 2016",
 	"content": "Fires in the area have made some of the trail diffcult, but besides that great trip!"
 }

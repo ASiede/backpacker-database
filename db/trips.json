@@ -1,5 +1,5 @@
-{	"_id" : {"$oid": "5b9845ed6bfe8fba53fb732f"},
-	"userContributed": {"$oid": "5b958af16bfe8fba53fb5fc6"},
+{	"_id" : "5b9845ed6bfe8fba53fb732f",
+	"userContributed": "5b958af16bfe8fba53fb5fc6",
 	"name": "Bull of the woods wilderness with swimming pool",
 	"location": {
 		"longAndLat": "45.5122° N, 122.6587° W",
@@ -11,10 +11,7 @@
 	"longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
 	"difficulty": "easy",
 	"features": ["swimming spot", "old-growth trees", "wilderness"],
-	"comments": [{
-	"tripId": {"$oid": "5b9845ed6bfe8fba53fb732f"},
-	"userContributed": {"$oid":"5b958af16bfe8fba53fb5fc6"},
+	"comments": [],
 	"dateAdded": "April 4th 2016",
 	"content": "Fires in the area have made some of the trail diffcult, but besides that great trip!"
-}]
 }

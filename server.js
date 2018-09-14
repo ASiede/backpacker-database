@@ -60,8 +60,8 @@ app.post('/trips', (req, res) => {
     }
   }
 
-  User.findById(req.body.userContributed._id)
-    .then( user => { 
+  User.findById(req.body.userContributed)
+    .then(user => { 
       if (user) {
         Trip.create({
         	name: req.body.name,

@@ -51,7 +51,7 @@ tripSchema.methods.serialize = function() {
 	return {
 		id: this._id,
 		name: this.name,
-		userContributed: this.userContributed.userName,
+		userContributed: this.userContributed,
 		location: this.location,
 		nights: this.nights,
 		totalMileage: this.totalMileage,
