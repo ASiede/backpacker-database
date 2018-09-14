@@ -10,6 +10,7 @@ const commentSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, ref: 'Trip'
   },
   content: 'string',
+  dateAdded: 'string'
 });
 
 const tripSchema = mongoose.Schema({
@@ -59,7 +60,8 @@ tripSchema.methods.serialize = function() {
 		longDescription: this.longDescription,
 		difficulty: this.difficulty,
 		features: this.features,
-    comments: [commentSchema]
+    comments: this.comments
+    
 	};	
 };
 
