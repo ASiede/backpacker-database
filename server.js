@@ -128,7 +128,7 @@ app.delete('/trips/:id', (req, res) => {
 
 //Post a comment
 app.post('/comments', (req, res) => {
-  const requiredFields = ['content', 'tripId', 'userContributed'];
+  const requiredFields = ['content', 'tripId', 'userContributed', 'dateAdded'];
   for (let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
@@ -149,13 +149,17 @@ app.post('/comments', (req, res) => {
           _id: req.body.tripId
         })
         .then(trip => {
-          // res.status(201);
+          
           trip.comments.push({
-            content: `${req.body.content}`,
-            // tripId: `${req.body.tripId}`,
-            userContributed: `${req.body.userContributed}`
+            content: `TESTTESTES`,
+            tripId: `${req.body.tripId}`,
+            userContributed: `${req.body.userContributed}`,
+            dataAdded: `${req.body.dataAdded}`
           });
+          // res.json(trip);
           trip.save();
+          res.json(trip);
+          res.status(201);
         })
         .catch(err => {
           console.error(err);
@@ -253,6 +257,14 @@ app.get('/users/:id', (req, res) => {
 });
 
 // Delete Comment
+app.delete('/comments/:id', (req, res) => {
+  //check to make sure paths match??
+  Comment
+    .deleteOne({ _id: `${req.params.id}`})
+    .then(comment => res.status(204).end())
+    .catch(err => res.status(500).json({ message: 'Internal server error' }));
+});
+
 
 let server;
 
