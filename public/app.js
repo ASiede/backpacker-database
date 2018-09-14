@@ -1,5 +1,8 @@
 "use strict"
 
+const TRIPS_SEARCH_URL = 'http://localhost:8080/trips'
+
+
 const MOCK_TRIPS = {
 	"trips": [
 		{
@@ -146,7 +149,7 @@ const MOCK_COMMENTS = {
 
 function getTrips(callback) {
   // setTimeout(function(){ callback(MOCK_TRIPS)}, 100);
-  $.getJSON('http://localhost:8080/trips', callback);
+  $.getJSON(TRIPS_SEARCH_URL, callback);
 }
 
 function displayTripsHTML(trip) {
@@ -163,7 +166,7 @@ let trips = {}
 function displayTrips(data) {
   const results = data.trips.map((trip) => displayTripsHTML(trip));
   
-  $('.trips').append(results);
+  $('.recent-trips').append(results);
   trips = data;
   console.log(trips);
 
@@ -193,6 +196,36 @@ function getAndDisplayTrips() {
   getTrips(displayTrips);
 }
 
+
+
+//Showing search results for id
+
+function getTripById(tripId, callback) {
+  $.getJSON(`${TRIPS_SEARCH_URL}/${tripId}`, displayTripById)
+}
+
+function displayTripById(data) {
+  console.log(data);
+  $('.recent-trips').prop('hidden', true);
+  $('.search-results').prop('hidden', false)  
+  $('.search-results').append(`
+    <p>${data.name}</p>
+    <p>${data.shortDescription}</p>
+    <p>${data.longDescription}</p>
+    <p>Difficulty rating: ${data.difficulty}</p>
+    `)
+}
+
+function handleSubmitSearchData() {
+  $('.submit-search-data').on('click', function(event) {
+    event.preventDefault();
+    const tripId = $("input[id='tripId']").val();
+    console.log('test');
+    console.log(tripId);
+    getTripById(tripId);
+  })
+}
+
 function displayTripDetails(selectedTripName) {
     function matchName(obj) {
       return obj.name === selectedTripName;
@@ -201,7 +234,7 @@ function displayTripDetails(selectedTripName) {
     const comments = selectedTrip.comments.map(comment => displayComments(comment)).join('');
     
     console.log(selectedTrip);
-    $('.trips').replaceWith(`
+    $('.recent-trips').replaceWith(`
       <section class="trip-details">
         <h2>One Trip Details</h2>
           <h3>${selectedTrip.name}</h3>
@@ -220,7 +253,7 @@ function displayTripDetails(selectedTripName) {
 }
 
 function handleClickForTripDetails() {
-  $('.trips').on('click', '.trip-name', function() {
+  $('.recent-trips').on('click', '.trip-name', function() {
     console.log('click click');
     let selectedTripName = $(this).text()
     console.log(selectedTripName);
@@ -285,8 +318,62 @@ function getAndDisplayProfile() {
 }
 
 
+//Posting a trip
+function handlesPostATripButton() {
+  $('.post-trip-button').on('click', function() {
+    $('.recent-trips').prop('hidden', true);
+    $('.post-trip').prop('hidden', false);
+  })
+}
+
+function displayPostedTrip() {
+  console.log(data);
+}
+
+function postTrip(name, state, longAndLat, nights, shortDescription, longDescription, difficulty, features, userContributed, callback) {
+  const settings = {
+    url: TRIPS_SEARCH_URL,
+    data: {
+      "name": `${name}`,
+      state: `${state}`,
+      longAndLat: `${longAndLat}`,
+      nights: `${nights}`,
+      shortDescription: `${shortDescription}`,
+      longDescription: `${longDescription}`,
+      difficulty: `${difficulty}`,
+      features: `${features}`,
+      "userContributed": `${userContributed}`
+    },
+  dataType:'json',
+  type: 'POST',
+  success: callback
+}
+ console.log(settings.data);
+  $.ajax(settings);
+}
+
+function handlesPostingNewTrip() {
+  $('.submit-trip').on('click', function(event) {
+    event.preventDefault();
+    const name = $(".trip-posting-form input[id='name']").val();
+    const state = $(".trip-posting-form select[id='state']").val();
+    const longAndLat = $(".trip-posting-form input[id='long-and-lat']").val();
+    const nights = $(".trip-posting-form input[id='nights']").val();
+    const shortDescription = $(".trip-posting-form input[id='short-description']").val();
+    const longDescription = $(".trip-posting-form input[id='long-description']").val();
+    const difficulty = $(".trip-posting-form select[id='difficulty']").val();
+    const features = $(".trip-posting-form input[id='features']").val();
+    const userContributed = $(".trip-posting-form input[id='user-contributed']").val();
+    const tripDate = [name, state, longAndLat, nights, shortDescription, longDescription, difficulty, features]
+    postTrip(name, state, longAndLat, nights, shortDescription, longDescription, difficulty, features, userContributed, displayPostedTrip);
+  })
+}
+
 
 function init () {
+  $(handlesPostingNewTrip);
+  $(handlesPostATripButton);
+  $(handleSubmitSearchData);
   $(getAndDisplayProfile);
   $(getAndDisplayTrips);
   $(getAndDisplayUsers);

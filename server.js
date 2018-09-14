@@ -50,7 +50,7 @@ app.get('/trips/:id', (req, res) => {
 // Post trip
 app.post('/trips', (req, res) => {
 
-  const requiredFields = ['userContributed','name', 'location', 'nights', 'totalMileage', 'longDescription'];
+  const requiredFields = ['name', 'userContributed', 'location', 'nights', 'totalMileage', 'longDescription'];
   for (let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
