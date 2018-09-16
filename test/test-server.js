@@ -113,18 +113,18 @@ describe('Trips API resource', function() {
     it('should add a new trip', function() {
 
       const newTrip = {
-        "userContributed": "5b958af16bfe8fba53fb5fc6",
-        "name": "Super cool Trip",
-  	    "location": {
+        userContributed: "5b958af16bfe8fba53fb5fc6",
+        name: "Super cool Trip",
+  	    location: {
     		  "longAndLat": "45.5122° N, 122.6587° W",
     		  "state": "CA"
     		},
-    		"nights": "3",
-    		"totalMileage": "9",
-    		"shortDescription": "Fun trip",
-    		"longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    		"difficulty": "easy",
-    		"features": ["wildflowers"]
+    		nights: "3",
+    		totalMileage: "9",
+    		shortDescription: "Fun trip",
+    		longDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    		difficulty: "easy",
+    		features: ["wildflowers"]
       };
     
       return chai.request(app)

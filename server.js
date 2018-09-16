@@ -62,27 +62,29 @@ app.post('/trips', (req, res) => {
 
   User.findById(req.body.userContributed)
     .then(user => { 
-      if (user) {
-        Trip.create({
-        	name: req.body.name,
-        	userContributed: user,
-        	location: req.body.location,
-        	nights: req.body.nights,
-        	totalMileage: req.body.totalMileage,
-        	shortDescription: req.body.shortDescription,
-        	longDescription: req.body.longDescription,
-        	difficulty: req.body.difficulty,
-        	features: req.body.features,
+      if (!user) {
+        
+        const message = `User not found`;
+          console.error(message);
+          return res.status(500).send(message);
+          
+      } else {
+          Trip.create({
+          name: req.body.name,
+          userContributed: user,
+          location: req.body.location,
+          nights: req.body.nights,
+          totalMileage: req.body.totalMileage,
+          shortDescription: req.body.shortDescription,
+          longDescription: req.body.longDescription,
+          difficulty: req.body.difficulty,
+          features: req.body.features,
         })
         .then(trip => res.status(201).json(trip.serialize()))
         .catch(err => {
           console.error(err);
           res.status(500).json({ message: 'Internal server error' });
         });
-      } else {
-          const message = `User not found`;
-          console.error(message);
-          return res.status(500).send(message);
         }    
     })
     .catch(err => {
