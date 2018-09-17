@@ -1,6 +1,7 @@
 "use strict"
 
-const TRIPS_SEARCH_URL = 'http://localhost:8080/trips'
+const TRIPS_SEARCH_URL = 'http://localhost:8080/trips';
+const USERS_SEARCH_URL = 'http://localhost:8080/users';
 
 
 const MOCK_TRIPS = {
@@ -234,10 +235,13 @@ function displayTripDetails(selectedTripName) {
     const comments = selectedTrip.comments.map(comment => displayComments(comment)).join('');
     
     console.log(selectedTrip);
-    $('.recent-trips').replaceWith(`
-      <section class="trip-details">
-        <h2>One Trip Details</h2>
-          <h3>${selectedTrip.name}</h3>
+    $('.recent-trips').prop('hidden', true);
+    $('.trip-details').prop('hidden', false);
+    console.log(`${selectedTrip.id}`)
+    $('.trip-details').html(`
+          <h2>Check Out these Trips</h2>
+          <div class=tripId hidden></div>
+          <h3 data-tripId=${selectedTrip.id}>${selectedTrip.name}</h3>
           <p>${selectedTrip.shortDescription}</p>
           <p>${selectedTrip.longDescription}</p>
           <p>Contributed by: ${selectedTrip.contributedBy}</p>
@@ -247,7 +251,8 @@ function displayTripDetails(selectedTripName) {
           <p>Features: ${selectedTrip.features}</p>
         <h2 class="comments" hidden>Comments</h2>  
           <p class="comments" hidden>${comments}</p>
-      </section>
+      <button class="delete-trip" type='click'>Delete this Trip</button><br>
+      <button class="edit-trip" type='click'>Edit this Trip</button><br>
       <button class="show-comments" type='click'>Show Comments</button>
       `);
 }
@@ -272,7 +277,8 @@ function handleSearchTripsButton() {
 //    Get users
 
 function getUsers(callback) {
-  setTimeout(function(){ callback(MOCK_USERS)}, 100);
+  // setTimeout(function(){ callback(MOCK_USERS)}, 100);
+  $.getJSON(USERS_SEARCH_URL, callback)
 }
 
 function displayUsersHTML(user) {
@@ -283,11 +289,19 @@ function displayUsersHTML(user) {
 
 function displayUsers(data) {
   const results = data.users.map((user) => displayUsersHTML(user));
+  $('.recent-trips').prop('hidden', true);
+  $('.users').prop('hidden', false);
   $('.users').append(results);
 }
 
 function getAndDisplayUsers() {
   getUsers(displayUsers);
+}
+
+function handleClickViewUsers() {
+  $('.view-users').on('click', function() {
+    getAndDisplayUsers();
+  })
 }
 
 //    Get one user profile
@@ -335,20 +349,21 @@ function postTrip(name, state, longAndLat, nights, shortDescription, longDescrip
     url: TRIPS_SEARCH_URL,
     data: {
       "name": `${name}`,
-      state: `${state}`,
-      longAndLat: `${longAndLat}`,
-      nights: `${nights}`,
-      shortDescription: `${shortDescription}`,
-      longDescription: `${longDescription}`,
-      difficulty: `${difficulty}`,
-      features: `${features}`,
+      "state": `${state}`,
+      "longAndLat": `${longAndLat}`,
+      "nights": `${nights}`,
+      "shortDescription": `${shortDescription}`,
+      "longDescription": `${longDescription}`,
+      "difficulty": `${difficulty}`,
+      "features": `${features}`,
       "userContributed": `${userContributed}`
     },
   dataType:'json',
   type: 'POST',
-  success: callback
+  success: callback,
+  contentType: 'JSON'
 }
- console.log(settings.data);
+ console.log(settings);
   $.ajax(settings);
 }
 
@@ -369,18 +384,138 @@ function handlesPostingNewTrip() {
   })
 }
 
+//Editing a trip
+
+function updateTripDetails() {
+  $('.trip-editing-view').prop('hidden', false);
+}
+
+function handleClickToEdit() {
+  $('.trip-details').on('click', '.edit-trip', function() {
+    updateTripDetails();
+  })
+}
+
+function putTripEdits(name, callback) {
+  const settings = {
+    url: TRIPS_SEARCH_URL + '/5b9dae9a1ce0a2565157bd7d',
+    data: {"name": `${name}`},
+    dataType: 'json',
+    method: 'GET',
+    // contentType: 'application/json',
+    success: callback
+  }
+  $.ajax(settings);
+}
+
+function displayUpdatedTripDetails() {
+  $('.trip-editing-form').replaceWith('success!?')
+}
+
+function submitPutUpdates() {
+  $('.submit-trip-edits').on('click', function(event) {
+    event.preventDefault();
+    console.log('heard submit data');
+    const name = $(".trip-editing-form input[id='name']").val();
+    console.log(name);
+    putTripEdits(name, displayUpdatedTripDetails);
+  })
+}
+
+
+
+// DELETE a trip
+
+function deleteTrip(tripId, callback) {
+  const settings = {
+    url: TRIPS_SEARCH_URL + '/' + `${tripId}`,
+    data: {id: `${tripId}`},
+    dataType: 'json',
+    type: 'DELETE',
+    success: callback
+  }
+  $.ajax(settings)
+}
+
+function displayDeleteSuccess() {
+  $('.trip-details').html('trip has been deleted')
+}
+
+function handlesClickToDeleteTrip() {
+  $('.trip-details').on('click', '.delete-trip', function() {
+    // const tripId = $('.trip-details h3').data('tripId');
+    // const tripId = $('.tripId').html();
+    const tripId = "5b9dae9a1ce0a2565157bd7d";
+    console.log(tripId);
+    deleteTrip(tripId, displayDeleteSuccess);
+  })
+}
+
+
+
+
+// Become a user
+function handleClickBecomeUser() {
+  $('.post-user-button').on('click', function() {
+    $('.recent-trips').prop('hidden', true);
+    $('.register-as-user').prop('hidden', false)
+  })
+}
+
+function postNewUser(userName, firstName, lastName, password, callback) {
+  const settings = {
+    url: USERS_SEARCH_URL,
+    data: {
+      userName:`${userName}`,
+      firstName:`${firstName}`,
+      lastName:`${lastName}`,
+      password:`${password}`,
+    },
+    dataType: 'json',
+    method:'POST',
+    success: callback,
+  }
+  $.ajax(settings);
+  console.log(settings.data)
+}
+
+function successMessage() {
+  $('.register-as-user').html('registration success');
+}
+
+function handleSubmitUserInfo() {
+  $('.submit-user-info').on('click', function(event) {
+    event.preventDefault();
+    console.log('heard become a user')
+    const userName = $(".register-as-user input[id='userName']").val();
+    const firstName = $(".register-as-user input[id='firstName']").val();
+    const lastName = $(".register-as-user input[id='lastName']").val();
+    const password = $(".register-as-user input[id='password']").val();
+    postNewUser(userName, firstName, lastName, password, successMessage);
+  })
+}
+
+//
+
+
 
 function init () {
-  $(handlesPostingNewTrip);
-  $(handlesPostATripButton);
+  $(handleClickToEdit);
+  $(handlesClickToDeleteTrip);
+  $(handleSubmitUserInfo);
+  $(handleClickBecomeUser);
+  
   $(handleSubmitSearchData);
   $(getAndDisplayProfile);
   $(getAndDisplayTrips);
-  $(getAndDisplayUsers);
+  $(handleClickViewUsers);
   $(handleClickForComments);
   $(handleClickToHideComments);
   $(handleClickForTripDetails);
   $(handleSearchTripsButton);
+  $(handlesPostingNewTrip);
+  $(handlesPostATripButton);
+  $(submitPutUpdates);
 }
 
 $(init)

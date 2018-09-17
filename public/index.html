@@ -9,7 +9,103 @@
 
 
 <section class="recent-trips">
-	<h2>Check Out these Trips</h2>
+	
+</section>
+
+<section class="trip-details" hidden>
+	<h2>Check Out this Trip</h2>
+</section>
+
+<section class="trip-editing-view" hidden>
+	<form class="trip-editing-form">
+		<label for="name">Name</label>
+		<input type="text" id="name" value="updated name" ></input><br>
+
+		<label for="state">State</label>
+		<select id="state" >
+			<option value="AL">Alabama</option>
+			<option value="AK">Alaska</option>
+			<option value="AZ">Arizona</option>
+			<option value="AR">Arkansas</option>
+			<option value="CA">California</option>
+			<option value="CO">Colorado</option>
+			<option value="CT">Connecticut</option>
+			<option value="DE">Delaware</option>
+			<option value="DC">District Of Columbia</option>
+			<option value="FL">Florida</option>
+			<option value="GA">Georgia</option>
+			<option value="HI">Hawaii</option>
+			<option value="ID">Idaho</option>
+			<option value="IL">Illinois</option>
+			<option value="IN">Indiana</option>
+			<option value="IA">Iowa</option>
+			<option value="KS">Kansas</option>
+			<option value="KY">Kentucky</option>
+			<option value="LA">Louisiana</option>
+			<option value="ME">Maine</option>
+			<option value="MD">Maryland</option>
+			<option value="MA">Massachusetts</option>
+			<option value="MI">Michigan</option>
+			<option value="MN">Minnesota</option>
+			<option value="MS">Mississippi</option>
+			<option value="MO">Missouri</option>
+			<option value="MT">Montana</option>
+			<option value="NE">Nebraska</option>
+			<option value="NV">Nevada</option>
+			<option value="NH">New Hampshire</option>
+			<option value="NJ">New Jersey</option>
+			<option value="NM">New Mexico</option>
+			<option value="NY">New York</option>
+			<option value="NC">North Carolina</option>
+			<option value="ND">North Dakota</option>
+			<option value="OH">Ohio</option>
+			<option value="OK">Oklahoma</option>
+			<option value="OR">Oregon</option>
+			<option value="PA">Pennsylvania</option>
+			<option value="RI">Rhode Island</option>
+			<option value="SC">South Carolina</option>
+			<option value="SD">South Dakota</option>
+			<option value="TN">Tennessee</option>
+			<option value="TX">Texas</option>
+			<option value="UT">Utah</option>
+			<option value="VT">Vermont</option>
+			<option value="VA">Virginia</option>
+			<option value="WA">Washington</option>
+			<option value="WV">West Virginia</option>
+			<option value="WI">Wisconsin</option>
+			<option value="WY">Wyoming</option>
+		</select><br>
+
+		<label for="long-and-lat">Longitude and Latitude:</label>
+	    <input id="long-and-lat" type="text" value="" ><br>
+		
+	    <label for="nights">Number of nights:</label>
+	    <input id="nights" type="text" value="" ><br>
+	    
+	    <label for="short-description">Short Description:</label>
+	    <input id="short-description" type="text" value=""><br>
+
+	    <label for="long-description">Long Description:</label>
+	    <input id="long-description" type="text" value="" ></input><br>
+
+	    <label for="difficulty">Difficulty</label>
+	    <select id="difficulty">
+	    	<option value="Easy">Easy</option>
+	    	<option value="Moderate">Moderate</option>
+	    	<option value="Difficult">Difficult</option>
+	    </select><br>
+
+		<!-- how to auto fill users -->
+		<label for="features">Features</label><br>
+
+		<input type="checkbox" name="features" value="waterfall" id=features>Waterfall<br>
+		<input type="checkbox" name="features" value="" id=features>Old Growth Trees<br>
+		<input type="checkbox" name="features" value="" id=features>Swimming<br>
+		<input type="text" id="user-contributed" value="" ></input><br>
+
+		<button class="submit-trip-edits" type="submit">Submit Trip Edits</button>
+	
+	</form>
 </section>
 
 <section class="search-results">
@@ -101,10 +197,27 @@
 		<input type="checkbox" name="features" value="waterfall" checked id=features>Waterfall<br>
 		<input type="checkbox" name="features" value="old-growth-trees" id=features>Old Growth Trees<br>
 		<input type="checkbox" name="features" value="swimming" id=features>Swimming<br>
-		<input type="text" id="user-contributed" value="ObjectId('5b958af16bfe8fba53fb5fc6')" required></input><br>
+		<input type="text" id="user-contributed" value="5b9dab8987c1e35620d2ac01" required></input><br>
 
 		<button class="submit-trip" type="submit">Submit Trip</button>
 	
+	</form>
+</section>
+
+<section class="register-as-user" hidden>
+	<form class="user-registration">
+		<label for="userName">Username</label>
+		<input id="userName" type="text" value="test"><br>
+
+		<label for="firstName">First Name:</label>
+		<input id="firstName" type="text" value="test"><br>
+
+		<label for="lastName">Last Name:</label>
+		<input id="lastName" type="text" value="test"><br>
+
+		<label for="password">Password</label>
+		<input id="password" type="text" value="test"><br>
+		<button class="submit-user-info" type="submit">Submit this info</button>
 	</form>
 </section>
 
@@ -126,6 +239,8 @@
 
 <br><button class="search-trips" type='click'>Search Trips</button>
 <br><button class="post-trip-button" type='click'>Post a Trip</button>
+<br><button class="post-user-button" type='click'>Register as a user</button>
+<br><button class="view-users" type='click'>View Users</button>
 
 <!-- //by state, by name, by nights, by mileage, by difficulty, by contributed by, by features, by content -->
 <form hidden>
