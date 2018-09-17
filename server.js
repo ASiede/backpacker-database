@@ -60,7 +60,7 @@ app.post('/trips', (req, res) => {
     }
   }
 
-  User.findById(req.body.userContributed._id)
+  User.findById(req.body.userContributed)
     .then( user => { 
       if (user) {
         Trip.create({
@@ -116,7 +116,7 @@ app.put('/trips/:id', (req, res) => {
     .catch(err => res.status(500).json({ message: 'Internal server error' }));
 });
 
-//DELETE endpoint
+//DELETE trip
 app.delete('/trips/:id', (req, res) => {
   //check to make sure paths match??
   Trip
@@ -151,10 +151,10 @@ app.post('/comments', (req, res) => {
         .then(trip => {
           
           trip.comments.push({
-            content: `TESTTESTES`,
+            content: `${req.body.content}`,
             tripId: `${req.body.tripId}`,
             userContributed: `${req.body.userContributed}`,
-            dataAdded: `${req.body.dataAdded}`
+            dateAdded: `${req.body.dataAdded}`
           });
           // res.json(trip);
           trip.save();
@@ -260,7 +260,7 @@ app.get('/users/:id', (req, res) => {
 app.delete('/comments/:id', (req, res) => {
   //check to make sure paths match??
   Comment
-    .deleteOne({ _id: `${req.params.id}`})
+    .findByIdAndRemove(req.params.id)
     .then(comment => res.status(204).end())
     .catch(err => res.status(500).json({ message: 'Internal server error' }));
 });

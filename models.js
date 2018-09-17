@@ -81,7 +81,8 @@ commentSchema.methods.serialize = function() {
     id: this._id,
     tripId: this.tripId,
     userContributed: this.userContributed.userName,
-    content: this.content
+    content: this.content,
+    dateAdded: this.dateAdded
   }
 };
 
