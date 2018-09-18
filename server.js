@@ -53,7 +53,7 @@ app.get('/trips/:id', (req, res) => {
 
 // Post trip
 app.post('/trips', jsonParser, (req, res) => {
-  console.log(req);
+  console.log(req.body);
   const requiredFields = ['name', 'userContributed', 'location', 'nights', 'totalMileage', 'longDescription'];
   for (let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
