@@ -4,11 +4,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 
+const bodyParser = require('body-parser');
+
 mongoose.Promise = global.Promise;
 
 const { PORT, DATABASE_URL } = require("./config");
 const { Trip, User, Comment } = require('./models');
 
+const jsonParser = bodyParser.json();
 const app = express();
 
 app.use(express.static('public'));
@@ -17,6 +20,7 @@ app.use(morgan('common'));
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
@@ -38,7 +42,7 @@ app.get("/trips", (req, res) => {
 
 //Get trip by id
 app.get('/trips/:id', (req, res) => {
-  	Trip.findById(req.params.id)
+    Trip.findById(req.params.id)
     	.then(trip => res.json(trip.serialize()))
     	//Do I need to check that id and route is the same
     	.catch(err => {
@@ -48,9 +52,9 @@ app.get('/trips/:id', (req, res) => {
 });
 
 // Post trip
-app.post('/trips', (req, res) => {
-
-  const requiredFields = ['userContributed','name', 'location', 'nights', 'totalMileage', 'longDescription'];
+app.post('/trips', jsonParser, (req, res) => {
+  console.log(req.body);
+  const requiredFields = ['name', 'userContributed', 'location', 'nights', 'totalMileage', 'longDescription'];
   for (let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
@@ -92,8 +96,10 @@ app.post('/trips', (req, res) => {
 });
 
 //Put to update trip
-app.put('/trips/:id', (req, res) => {
+app.put('/trips/:id', jsonParser, (req, res) => {
   // ensure that the id in the request path and the one in request body match
+  console.log(req.body);
+  console.log(req.params);
   if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
     const message = (
       `Request path id (${req.params.id}) and request body id ` +
@@ -218,8 +224,11 @@ app.get("/users", (req, res) => {
 
 // Post a new user
 
-app.post('/users', (req, res) => {
+app.post('/users', jsonParser, (req, res) => {
+  console.log(req.body);
+
   const requiredFields = ['userName','firstName', 'lastName', 'password'];
+  
   for (let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
@@ -271,7 +280,7 @@ let server;
 function runServer(databaseUrl, port = PORT) {
   return new Promise((resolve, reject) => {
     mongoose.connect(
-      databaseUrl,
+      databaseUrl, { useNewUrlParser: true },
       err => {
         if (err) {
           return reject(err);

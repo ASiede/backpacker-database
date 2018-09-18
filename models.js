@@ -29,6 +29,7 @@ const tripSchema = mongoose.Schema({
   difficulty: 'string',
   features: ['string'],
   //comments are coming out weird when empty
+  dateAdded: 'string',
   comments: [commentSchema]
 });
 
@@ -60,7 +61,8 @@ tripSchema.methods.serialize = function() {
 		longDescription: this.longDescription,
 		difficulty: this.difficulty,
 		features: this.features,
-    comments: this.comments
+    comments: this.comments,
+    dateAdded: this.dateAdded
     
 	};	
 };
