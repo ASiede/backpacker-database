@@ -319,7 +319,7 @@ function displayUserProfile(data) {
   $('.users').prop('hidden', true);
   $('.user-profile').prop('hidden', false)
   $('.user-profile').append(`
-    <p>${data.userName}</p>
+    <p>${data.username}</p>
     <p>${data.firstName} ${data.lastName}</p>
     <p>Trips Posted: ${data.tripsPosted}</p>
     `);
@@ -328,6 +328,7 @@ function displayUserProfile(data) {
 function getAndDisplayProfile() {
   $('.users').on ('click', 'p', function() {
     const userId = $(this).data('user-id');
+    console.log(userId);
     getUserById(userId, displayUserProfile);
   }) 
 }
@@ -483,7 +484,7 @@ function handleClickBecomeUser() {
 
 function postNewUser(userData, callback) {
   const _data = {
-      userName:`${userData.userName}`,
+      username:`${userData.username}`,
       firstName:`${userData.firstName}`,
       lastName:`${userData.lastName}`,
       password:`${userData.password}`,
@@ -506,11 +507,11 @@ function successMessage() {
 function handleSubmitUserInfo() {
   $('.submit-user-info').on('click', function(event) {
     event.preventDefault();
-    const userName = $(".register-as-user input[id='userName']").val();
+    const username = $(".register-as-user input[id='username']").val();
     const firstName = $(".register-as-user input[id='firstName']").val();
     const lastName = $(".register-as-user input[id='lastName']").val();
     const password = $(".register-as-user input[id='password']").val();
-    const userData = {userName, firstName, lastName, password}
+    const userData = {username, firstName, lastName, password}
     postNewUser(userData, successMessage);
   })
 }
