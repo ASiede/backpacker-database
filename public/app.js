@@ -328,6 +328,7 @@ function displayUserProfile(data) {
 function getAndDisplayProfile() {
   $('.users').on ('click', 'p', function() {
     const userId = $(this).data('user-id');
+    console.log(userId);
     getUserById(userId, displayUserProfile);
   }) 
 }
