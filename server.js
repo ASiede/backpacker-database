@@ -255,7 +255,7 @@ app.put('/trips/:id', (req, res) => {
 // app.post('/users', jsonParser, (req, res) => {
 //   console.log(req.body);
 
-//   const requiredFields = ['userName','firstName', 'lastName', 'password'];
+//   const requiredFields = ['username','firstName', 'lastName', 'password'];
   
 //   for (let i = 0; i < requiredFields.length; i++) {
 //     const field = requiredFields[i];
@@ -267,7 +267,7 @@ app.put('/trips/:id', (req, res) => {
 //   }
 //   User.create({
 //     // check to make sure username isn't taken
-//     userName: req.body.userName,
+//     username: req.body.username,
 //     firstName: req.body.firstName,
 //     lastName: req.body.lastName,
 //     // hashing password etc

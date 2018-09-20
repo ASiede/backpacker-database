@@ -37,7 +37,7 @@ const tripSchema = mongoose.Schema({
 });
 
 const userSchema = mongoose.Schema({
-  userName: {
+  username: {
     type: String,
     required: true,
     unique: true
@@ -54,7 +54,7 @@ const userSchema = mongoose.Schema({
 userSchema.methods.serialize = function() {
   return {
     id: this._id,
-    userName: this.userName || '',
+    username: this.username || '',
     firstName: this.firstName || '',
     lastName: this.lastName || '',
     tripsPosted: this.tripsPosted
@@ -74,7 +74,7 @@ userSchema.statics.hashPassword = function(password) {
 
 
 // const userSchema = mongoose.Schema({
-//   userName: 'string',
+//   username: 'string',
 //   firstName: 'string',
 //   lastName: 'string',
 //   password: 'string',
@@ -91,7 +91,7 @@ tripSchema.methods.serialize = function() {
 	return {
 		id: this._id,
 		name: this.name,
-		userContributed: this.userContributed.userName,
+		userContributed: this.userContributed.username,
 		location: this.location,
 		nights: this.nights,
 		totalMileage: this.totalMileage,
@@ -108,7 +108,7 @@ tripSchema.methods.serialize = function() {
 // userSchema.methods.serialize = function() {
 // 	return {
 // 		// id: this._id,
-// 		userName: this.userName,
+// 		username: this.username,
 // 		firstName: this.firstName,
 // 		lastName: this.lastName,
 // 		// password: this.password,
@@ -120,7 +120,7 @@ commentSchema.methods.serialize = function() {
   return {
     id: this._id,
     tripId: this.tripId,
-    userContributed: this.userContributed.userName,
+    userContributed: this.userContributed.username,
     content: this.content,
     dateAdded: this.dateAdded
   }
