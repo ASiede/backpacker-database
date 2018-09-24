@@ -7,6 +7,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const passport = require('passport');
+const cors = require('cors');
 
 const bodyParser = require('body-parser');
 
@@ -20,7 +21,7 @@ const { Trip, User, Comment } = require('./models');
 
 const jsonParser = bodyParser.json();
 const app = express();
-
+app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
 app.use(morgan('common'));
@@ -71,6 +72,7 @@ app.get("/trips", (req, res) => {
 //Get trip by id
 app.get('/trips/:id', (req, res) => {
     Trip.findById(req.params.id)
+      .populate('userContributed')
     	.then(trip => res.json(trip.serialize()))
     	//Do I need to check that id and route is the same
     	.catch(err => {
@@ -80,8 +82,7 @@ app.get('/trips/:id', (req, res) => {
 });
 
 // Post trip
-app.post('/trips', jsonParser, (req, res) => {
-  console.log(req.body);
+app.post('/trips', jwtAuth, jsonParser, (req, res) => {
   const requiredFields = ['name', 'userContributed', 'location', 'nights', 'totalMileage', 'longDescription'];
   for (let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
@@ -95,6 +96,7 @@ app.post('/trips', jsonParser, (req, res) => {
   User.findById(req.body.userContributed)
     .then( user => { 
       if (user) {
+        console.log(user);
         Trip.create({
         	name: req.body.name,
         	userContributed: user,
@@ -146,7 +148,7 @@ app.put('/trips/:id', jsonParser, (req, res) => {
   });
 
   Trip.findByIdAndUpdate(req.params.id, { $set: toUpdate })
-    .then(trip => res.status(204).end())
+    .then(trip => res.status(201).json(trip.serialize()))
     .catch(err => res.status(500).json({ message: 'Internal server error' }));
 });
 

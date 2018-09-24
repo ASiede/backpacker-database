@@ -31,7 +31,6 @@ const tripSchema = mongoose.Schema({
   longDescription:'string',
   difficulty: 'string',
   features: ['string'],
-  //comments are coming out weird when empty
   dateAdded: 'string',
   comments: [commentSchema]
 });
@@ -87,11 +86,14 @@ tripSchema.pre('find', function(next) {
 	next();
 });
 
+
 tripSchema.methods.serialize = function() {
+  // console.log(user);
+  // console.log(this.userContributed.username);
 	return {
 		id: this._id,
 		name: this.name,
-		userContributed: this.userContributed.username,
+		userContributed: this.userContributed,
 		location: this.location,
 		nights: this.nights,
 		totalMileage: this.totalMileage,

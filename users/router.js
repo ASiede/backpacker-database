@@ -152,4 +152,14 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/:id', (req, res) => {
+    User.findById(req.params.id)
+      .then(user => res.json(user.serialize()))
+      //Do I need to check that id and route is the same
+      .catch(err => {
+          console.error(err);
+          res.status(500).json({ message: 'Internal server error' });
+    });
+});
+
 module.exports = {router};

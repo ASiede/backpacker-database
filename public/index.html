@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title></title>
+	<title>Backpacker Database</title>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 <body>
-<h1>Hello World!</h1>
+<h1>Backpacker Database</h1>
 
 
 <section class="recent-trips">
-	
+<h2>Check out recent backpacking trips users have posted</h2>	
 </section>
 
 <section class="trip-details" hidden>
@@ -104,7 +104,6 @@
 		<input type="checkbox" name="features" value="waterfall" id=features>Waterfall<br>
 		<input type="checkbox" name="features" value="" id=features>Old Growth Trees<br>
 		<input type="checkbox" name="features" value="" id=features>Swimming<br>
-		<input type="text" id="user-contributed" value="" ></input><br>
 
 		<button class="submit-trip-edits" type="submit">Submit Trip Edits</button>
 	
@@ -203,29 +202,14 @@
 		<input type="checkbox" name="features" value="waterfall" checked id=features>Waterfall<br>
 		<input type="checkbox" name="features" value="old-growth-trees" id=features>Old Growth Trees<br>
 		<input type="checkbox" name="features" value="swimming" id=features>Swimming<br>
-		<input type="text" id="user-contributed" value="5b9dab8987c1e35620d2ac01" required></input><br>
+		<!-- <input type="text" id="user-contributed" value="5b9dab8987c1e35620d2ac01" required></input><br> -->
 
 		<button class="submit-trip" type="submit">Submit Trip</button>
 	
 	</form>
 </section>
 
-<section class="register-as-user" hidden>
-	<form class="user-registration">
-		<label for="username">Username</label>
-		<input id="username" type="text" value="test"><br>
 
-		<label for="firstName">First Name:</label>
-		<input id="firstName" type="text" value="test"><br>
-
-		<label for="lastName">Last Name:</label>
-		<input id="lastName" type="text" value="test"><br>
-
-		<label for="password">Password</label>
-		<input id="password" type="text" value="test"><br>
-		<button class="submit-user-info" type="submit">Submit this info</button>
-	</form>
-</section>
 
 <section class="users" hidden>
 	<h2>Users</h2>
@@ -242,10 +226,11 @@
 	<h2>User Profile</h2>
 </section>
 
-<br><button class="search-trips" type='click'>Search Trips</button>
-<br><button class="post-trip-button" type='click'>Post a Trip</button>
-<br><button class="post-user-button" type='click'>Register as a user</button>
-<br><button class="view-users" type='click'>View Users</button>
+<button class="search-trips" type='click'>Search Trips</button><br>
+<button class="post-trip-button" type='click'>Post a Trip</button><br>
+<button class="view-users" type='click'>View Users</button><br>
+
+<!-- <button type="click" class="secret">Protected Area</button> -->
 
 <!-- //by state, by name, by nights, by mileage, by difficulty, by contributed by, by features, by content -->
 <form hidden>
@@ -342,9 +327,51 @@
 	<input id="tripId" type="text" value="5b9845ed6bfe8fba53fb732f"><br>
 
 	<button class="submit-search-data" type="submit">Submit Search Data</button>
-
 </form>
 
+<div id="loginModal" class="login-area modal" hidden>
+
+<!-- <section class="login-area" hidden> -->
+	<div class="modal-content">
+		<span class="close">&times;</span>
+		<form class="login-form">
+			<label for="username">Username:</label>
+			<input id="username" type="text" value="test"><br>
+
+			<label for="password">Password:</label>
+			<input id="password" type="text" value="testtesttest"><br>
+
+			<button type="submit" class="submit-login-info">Submit</button>
+		</form>
+	</div>	
+<!-- </section> -->
+</div>
+
+<div id="registerModal" class="register-as-user modal" hidden>
+	<section class="modal-content">
+		<span class="close">&times;</span>
+		<form class="user-registration">
+			<label for="username">Username</label>
+			<input id="username" type="text" value="test"><br>
+
+			<label for="firstName">First Name:</label>
+			<input id="firstName" type="text" value="test"><br>
+
+			<label for="lastName">Last Name:</label>
+			<input id="lastName" type="text" value="test"><br>
+
+			<label for="password">Password</label>
+			<input id="password" type="text" value="test"><br>
+			<button class="submit-user-info" type="submit">Submit this info</button>
+		</form>
+	</section>
+</div>	
+
+<section class="logged-in"></section>
+<button class="log-out" type='click' hidden>Log Out</button>
+<button class="login" type='click'>Login</button>
+<p class="register-below">Not Registered? Register Below</p>
+<button class="register" type='click'>Register as a user</button>
 
 <script src="app.js"></script>
 </body>
