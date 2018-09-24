@@ -3,7 +3,6 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const mongoose = require('mongoose');
-// const faker = require('faker');
 
 const expect = chai.expect;
 
@@ -25,6 +24,10 @@ function seedTripData() {
   return Comment.insertMany(seedComments)
 }
 
+function seedUserData() {
+  return User.insertMany(seedUsers);
+}
+
 function tearDownDb() {
   console.warn('Deleting database');
   return mongoose.connection.dropDatabase();
@@ -40,6 +43,10 @@ describe('Trips API resource', function() {
     return seedTripData();
   });
 
+   beforeEach(function() {
+    return seedUserData();
+  });
+
   afterEach(function() {
     return tearDownDb();
   });
@@ -49,7 +56,8 @@ describe('Trips API resource', function() {
   });
 
 
-  // Get endpoint
+
+// Get endpoint
   describe('GET endpoint', function() {
 
     it('should return all existing trips', function() {
@@ -67,7 +75,6 @@ describe('Trips API resource', function() {
         });
     });
 
-
     it('should return trips with right fields', function() {
       let resTrip;
       return chai.request(app)
@@ -77,7 +84,6 @@ describe('Trips API resource', function() {
           expect(res).to.be.json;
           expect(res.body.trips).to.be.a('array');
           expect(res.body.trips).to.have.lengthOf.at.least(1);
-
           res.body.trips.forEach(function(trip) {
             expect(trip).to.be.a('object');
             // need to put userContributed back in when figre out
@@ -103,7 +109,6 @@ describe('Trips API resource', function() {
           expect(resTrip.features).to.be.a('array');
           //error expecting ['lake'] to be ["lake"]
           // expect(resTrip.features).to.equal(trip.features);
-
         });
     });
   });
@@ -126,64 +131,65 @@ describe('Trips API resource', function() {
         difficulty: "easy",
         features: ["wildflowers"]
       };
-    
+
+      //authorize user
+      
+      const userData = {"username": "tnorgay", "password": "everesteverest"}
+      
       return chai.request(app)
-        .post('/trips')
-        .send(newTrip)
+        .get('/users/')
         .then(function(res) {
-          expect(res).to.have.status(201);
-          expect(res).to.be.json;
-          expect(res.body).to.be.a('object');
-          expect(res.body).to.include.keys(
-            'id', 'name', 'location', 'nights', 'totalMileage', 'shortDescription', 'longDescription', 'features');
-          expect(res.body.id).to.not.be.null;
-          expect(res.body.name).to.equal(newTrip.name);
-          //below isn't working
-          // expect(res.body.location).to.equal(newTrip.location);
-          expect(res.body.nights).to.equal(newTrip.nights);
-          expect(res.body.totalMileage).to.equal(newTrip.totalMileage);
-          expect(res.body.shortDescription).to.equal(newTrip.shortDescription);
-          expect(res.body.longDescription).to.equal(newTrip.longDescription);
-          expect(res.body.difficulty).to.equal(newTrip.difficulty);
-          //something about arrays not equalling each other
-          // expect(res.body.features).to.contain(newTrip.features);
+          return chai.request(app)
+            .post('/auth/login')
+            .send(userData)
+            .then(function(res) {
+              return chai.request(app)
+              .post('/trips')
+              .send(newTrip)
+              .then(function(res) {
+                expect(res).to.have.status(201);
+                expect(res).to.be.json;
+                expect(res.body).to.be.a('object');
+                expect(res.body).to.include.keys(
+                  'id', 'name', 'location', 'nights', 'totalMileage', 'shortDescription', 'longDescription', 'features');
+                expect(res.body.id).to.not.be.null;
+                expect(res.body.name).to.equal(newTrip.name);
+                //below isn't working
+                // expect(res.body.location).to.equal(newTrip.location);
+                expect(res.body.nights).to.equal(newTrip.nights);
+                expect(res.body.totalMileage).to.equal(newTrip.totalMileage);
+                expect(res.body.shortDescription).to.equal(newTrip.shortDescription);
+                expect(res.body.longDescription).to.equal(newTrip.longDescription);
+                expect(res.body.difficulty).to.equal(newTrip.difficulty);
+                //something about arrays not equalling each other
+                // expect(res.body.features).to.contain(newTrip.features);
 
-          return Trip.findById(res.body.id);
+                return Trip.findById(res.body.id);
+              })
+              .then(function(trip) {
+                expect(trip.name).to.equal(newTrip.name);
+                expect(trip.nights).to.equal(newTrip.nights);
+                expect(trip.totalMileage).to.equal(newTrip.totalMileage);
+                expect(trip.shortDescription).to.equal(newTrip.shortDescription);
+                expect(trip.longDescription).to.equal(newTrip.longDescription);
+                expect(trip.difficulty).to.equal(newTrip.difficulty);
+                expect(trip.features).to.contain(newTrip.features);
+
+                expect(trip.location.longAndLat).to.equal(newTrip.location.longAndLat);
+                expect(trip.location.state).to.equal(newTrip.location.state);
+            })
         })
-        .then(function(trip) {
-          expect(trip.name).to.equal(newTrip.name);
-          expect(trip.nights).to.equal(newTrip.nights);
-          expect(trip.totalMileage).to.equal(newTrip.totalMileage);
-          expect(trip.shortDescription).to.equal(newTrip.shortDescription);
-          expect(trip.longDescription).to.equal(newTrip.longDescription);
-          expect(trip.difficulty).to.equal(newTrip.difficulty);
-          expect(trip.features).to.contain(newTrip.features);
-
-          expect(trip.location.longAndLat).to.equal(newTrip.location.longAndLat);
-          expect(trip.location.state).to.equal(newTrip.location.state);
         });
     });
   });
+
 //PUT endpoint
-
-
-
-
-
-
-  // put test not working
   describe('PUT endpoint', function() {
-    // strategy:
-    //  1. Get an existing restaurant from db
-    //  2. Make a PUT request to update that restaurant
-    //  3. Prove restaurant returned by request contains data we sent
-    //  4. Prove restaurant in db is correctly updated
     it('should update fields you send over', function() {
       const updateData = {
         name: 'Updated name',
         difficulty: 'really difficult'
       };
-
       return chai.request(app)
         .get('/trips')
         .then(function(res) {
@@ -192,10 +198,8 @@ describe('Trips API resource', function() {
             .put(`/trips/${res.body.trips[0].id}`)
             .send(updateData);
         })
-
         .then(function(res) {
-          expect(res).to.have.status(204);
-
+          expect(res).to.have.status(201);
           return Trip.findById(updateData.id);
         })
         .then(function(trip) {
@@ -203,16 +207,12 @@ describe('Trips API resource', function() {
           expect(trip.difficulty).to.equal(updateData.difficulty);
         });
     });
+  });   
 
-  });
-
-
+//DELETE endpoint
   describe('DELETE endpoint', function() {
-
     it('delete a trip by id', function() {
-
       let trip;
-
       return Trip
         .findOne()
         .then(function(_trip) {
@@ -228,8 +228,6 @@ describe('Trips API resource', function() {
         });
     });
   });
-
-
 });
 
 describe('initial page', function() {
@@ -238,8 +236,5 @@ describe('initial page', function() {
       .get('/', function(res) {
         expect(res).to.have.status(200);
     });
-
   });
-
 });
-

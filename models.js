@@ -1,6 +1,9 @@
 "use strict"
 
+const bcrypt = require('bcryptjs');
 const mongoose = require("mongoose");
+
+mongoose.Promise = global.Promise;
 
 const commentSchema = mongoose.Schema({
   userContributed: {
@@ -28,18 +31,54 @@ const tripSchema = mongoose.Schema({
   longDescription:'string',
   difficulty: 'string',
   features: ['string'],
-  //comments are coming out weird when empty
   dateAdded: 'string',
   comments: [commentSchema]
 });
 
 const userSchema = mongoose.Schema({
-  userName: 'string',
-  firstName: 'string',
-  lastName: 'string',
-  password: 'string',
+  username: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  firstName: {type: String, default: ''},
+  lastName: {type: String, default: ''},
   tripsPosted:[tripSchema]
 });
+
+userSchema.methods.serialize = function() {
+  return {
+    id: this._id,
+    username: this.username || '',
+    firstName: this.firstName || '',
+    lastName: this.lastName || '',
+    tripsPosted: this.tripsPosted
+  };
+};
+
+userSchema.methods.validatePassword = function(password) {
+  return bcrypt.compare(password, this.password);
+};
+
+userSchema.statics.hashPassword = function(password) {
+  return bcrypt.hash(password, 10);
+};
+
+
+
+
+
+// const userSchema = mongoose.Schema({
+//   username: 'string',
+//   firstName: 'string',
+//   lastName: 'string',
+//   password: 'string',
+//   tripsPosted:[tripSchema]
+// });
 
 //prehook for username
 tripSchema.pre('find', function(next) {
@@ -48,12 +87,13 @@ tripSchema.pre('find', function(next) {
 });
 
 
-
 tripSchema.methods.serialize = function() {
+  // console.log(user);
+  // console.log(this.userContributed.username);
 	return {
 		id: this._id,
 		name: this.name,
-		userContributed: this.userContributed.userName,
+		userContributed: this.userContributed,
 		location: this.location,
 		nights: this.nights,
 		totalMileage: this.totalMileage,
@@ -67,22 +107,22 @@ tripSchema.methods.serialize = function() {
 	};	
 };
 
-userSchema.methods.serialize = function() {
-	return {
-		id: this._id,
-		userName: this.userName,
-		firstName: this.firstName,
-		lastName: this.lastName,
-		password: this.password,
-		tripsPosted: this.tripsPosted,
-	};	
-};
+// userSchema.methods.serialize = function() {
+// 	return {
+// 		// id: this._id,
+// 		username: this.username,
+// 		firstName: this.firstName,
+// 		lastName: this.lastName,
+// 		// password: this.password,
+// 		// tripsPosted: this.tripsPosted
+// 	};	
+// };
 
 commentSchema.methods.serialize = function() {
   return {
     id: this._id,
     tripId: this.tripId,
-    userContributed: this.userContributed.userName,
+    userContributed: this.userContributed.username,
     content: this.content,
     dateAdded: this.dateAdded
   }

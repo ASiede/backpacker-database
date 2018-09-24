@@ -1,256 +1,123 @@
 "use strict"
 
-const TRIPS_SEARCH_URL = 'http://localhost:8080/trips';
+
+const {DATABASE_URL} = require('../config');
+
+const TRIPS_SEARCH_URL = DATABASE_URL+'/trips';
 const USERS_SEARCH_URL = 'http://localhost:8080/users';
+const USER_LOGIN= 'http://localhost:8080/auth/login';
+ 
 
 
-const MOCK_TRIPS = {
-	"trips": [
-		{
-			"id": "111",
-			"contributedBy": "Tenzing Norgay",
-  			"name": "Bull of the woods wilderness with swimming pool",
-  			"map": {},
-  			"location": {
-  				"longAndLat": "45.5122° N, 122.6587° W",
-  				"state": "OR"
-  				},
-  			"nights": 1,
-  			"totalMiles": 4.7,
-  			"shortDescription": "A short hike in to a camp spot on the top of a rocky ledge overlooking a beautiful swim spot",
-  			"longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  			"features": ["swimming spot", "old-growth trees", "wilderness"],
-  			"comments": [{
-  				"contributedBy": "Meryl Streep",
-  				"dateAdded": "April 4th 2016",
-  				"content": "Fires in the area have made some of the trail diffcult, but besides that great trip!"
-  			},
-  			{
-  				"contributedBy": "Keanu Reeves",
-  				"dateAdded": "June 4th 2018",
-  				"content": "So beautiful!"
-  			}]
-		},
-		{
-			"id": "222",
-			"contributedBy": "Edmund Hillary",
-  			"name": "Rainer Loop",
-  			"map": {},
-  			"location": {
-  				"longAndLat": "46.8523° N, 121.7603° W",
-  				"state": "OR"
-  				},
-  			"nights": 2,
-  			"totalMiles": 28,
-  			"shortDescription": "Beautiful and strenuos loop that includes ravines, rivers, the lowest elevation glacier in the nation, a suspension bridge, and wildflowers",
-  			"longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  			"features": ["glacier", "old-growth trees", "views"],
-  			"comments": [{
-  				"contributedBy": "Cuba Gooding Jr.",
-  				"dateAdded": "September 4th 2014",
-  				"content": "The suspension bridge was scary"
-  			}]
-		},
-		{
-			"id": "333",
-			"contributedBy": "Tenzing Norgay",
-  			"name": "Waldo Lake",
-  			"map": {},
-  			"location": {
-  				"longAndLat": "43.7270° N, 122.0445° W",
-  				"state": "OR"
-  				},
-  			"nights": 1,
-  			"totalMiles": 4,
-  			"shortDescription": "Easy flat hike in to a beautfil edge of the lake campspot",
-  			"longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  			"features": ["lake"],
-  			"comments": []
-		},
-		{
-			"id": "444",
-			"contributedBy": "Lewis Clark",
-  			"name": "Final Stretch of PCT",
-  			"map": {},
-  			"location": {
-  				"longAndLat": "45.6623° N, 121.9011° W",
-  				"state": "WA"
-  				},
-  			"nights": 7,
-  			"totalMiles": 80,
-  			"shortDescription": "Climb peaks and enjoy the PNW in all it's glory",
-  			"longDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  			"features": [],
-  			"comments": []
-		}
+//Check to see if logged in
 
-	]
+function checkLoginStatus() {
+  if(sessionStorage.getItem("token")) {
+    $('.logged-in').html('You are logged in as _getuser');
+    $('.login').prop('hidden', true);
+    $('.register').prop('hidden', true);
+    $('.register-below').prop('hidden', true);
+    $('.log-out').prop('hidden', false);
+  } else {
+    $('.logged-in').html('You are not logged in')
+  }
 }
-
-const MOCK_USERS = {
-	"users": [
-		{
-			"userName": "tnorgay",
-	  		"firstName": "Tenzing",
-	  		"lastName": "Norgay",
-	  		"password": "everest",
-	  		"tripsPosted": [{
-	  				"id": "111"
-	  			},
-		  		{
-		  			"id": "333"
-		  		}
-	  		]
-	  	},
-	  	{
-			"userName": "ehillary",
-	  		"firstName": "Edmund",
-	  		"lastName": "Hillary",
-	  		"password": "everest",
-	  		"tripsPosted": [{
-	  			"id": "222"
-	  		}]
-	  	},
-	  	{
-			"userName": "lclark",
-	  		"firstName": "Lewis",
-	  		"lastName": "Clark",
-	  		"password": "america",
-	  		"tripsPosted": [{
-	  			"id": "444"
-	  		}]
-	  	},	
-
-	]
-}
-
-const MOCK_COMMENTS = {
-	"comments": [
-		{
-			"tripId": "111",
-  			"contributedBy": "Meryl Streep",
-  			"dateAdded": "April 4th 2016",
-  			"content": "Fires in the area have made some of the trail diffcult, but besides that great trip!"
-  		},
-  		{
-			"tripId": "111",
-			"contributedBy": "Keanu Reeves",
-			"dateAdded": "June 4th 2018",
-			"content": "So beautiful!"
-  		},
-  		{
-  			"contributedBy": "Cuba Gooding Jr.",
-  			"dateAdded": "September 4th 2014",
-  			"content": "The suspension bridge was scary"
-  		}
-	]
-} 
 
 //    Getting Trips and comments
 
 function getTrips(callback) {
-  // setTimeout(function(){ callback(MOCK_TRIPS)}, 100);
-  $.getJSON(TRIPS_SEARCH_URL, callback);
+  const settings = {
+    url: TRIPS_SEARCH_URL,
+    method: "GET",
+    success: callback,
+    dataType: 'json',
+    contentType: 'application/json',
+    beforeSend: function(xhr) {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.getItem("token"));
+    }
+  }
+  $.ajax(settings);
 }
 
 function displayTripsHTML(trip) {
   return `
-  <p class='trip-name'>${trip.name}</p>
-  <p>${trip.location.state}</p>
+  <p data-trip-id=${trip.id} class='trip-name'>${trip.name}</p>
+  <p>${trip.shortDescription}</p>
+  <p>${trip.userContributed.username}</p>
   `
 }
 
-let trips = {}
-
 function displayTrips(data) {
   const results = data.trips.map((trip) => displayTripsHTML(trip));
-  
   $('.recent-trips').append(results);
-  trips = data;
-}
-
-function displayComments(comment) {
-  return `<p class="comments" hidden>${comment.content}</p>`
-}
-
-function handleClickForComments(data) {
-  $('body').on('click', '.show-comments', function(data) {
-    $('.comments').prop('hidden', false);
-    $('.show-comments').replaceWith(`<button type="click" class="hide-comments">Hide Comments</button>`);
-  });
-}
-
-function handleClickToHideComments() {
-  $('body').on('click', '.hide-comments', function(event) {
-    event.preventDefault();
-    $('.comments').prop('hidden', true);
-    $('.hide-comments').replaceWith(`<button class="show-comments" type='click'>Show Comments</button>`);
-  })
+  // trips = data;
 }
 
 function getAndDisplayTrips() {
   getTrips(displayTrips);
 }
+// function displayComments(comment) {
+//   return `<p class="comments" hidden>${comment.content}</p>`
+// }
 
+// function handleClickForComments(data) {
+//   $('body').on('click', '.show-comments', function(data) {
+//     $('.comments').prop('hidden', false);
+//     $('.show-comments').replaceWith(`<button type="click" class="hide-comments">Hide Comments</button>`);
+//   });
+// }
+
+// function handleClickToHideComments() {
+//   $('body').on('click', '.hide-comments', function(event) {
+//     event.preventDefault();
+//     $('.comments').prop('hidden', true);
+//     $('.hide-comments').replaceWith(`<button class="show-comments" type='click'>Show Comments</button>`);
+//   })
+// }
 
 
 //Showing search results for trip by id
 
-function getTripById(tripId, callback) {
-  $.getJSON(`${TRIPS_SEARCH_URL}/${tripId}`, displayTripById)
+function getTripById(selectedTripId, callback) {
+  $.getJSON(`${TRIPS_SEARCH_URL}/${selectedTripId}`, callback)
 }
 
-function displayTripById(data) {
-  $('.recent-trips').prop('hidden', true);
-  $('.search-results').prop('hidden', false)  
-  $('.search-results').append(`
-    <p>${data.name}</p>
-    <p>${data.shortDescription}</p>
-    <p>${data.longDescription}</p>
-    <p>Difficulty rating: ${data.difficulty}</p>
-    `)
-}
+// function handleSubmitSearchData() {
+//   $('.submit-search-data').on('click', function(event) {
+//     event.preventDefault();
+//     const tripId = $("input[id='tripId']").val();
+//     getTripById(tripId);
+//   })
+// }
 
-function handleSubmitSearchData() {
-  $('.submit-search-data').on('click', function(event) {
-    event.preventDefault();
-    const tripId = $("input[id='tripId']").val();
-    getTripById(tripId);
-  })
-}
-
-function displayTripDetails(selectedTripName) {
-    function matchName(obj) {
-      return obj.name === selectedTripName;
-    }
-    let selectedTrip = trips.trips.find(matchName);
-    const comments = selectedTrip.comments.map(comment => displayComments(comment)).join('');
+function displayTripDetails(data) {
+    // const comments = selectedTrip.comments.map(comment => displayComments(comment)).join('');
     $('.recent-trips').prop('hidden', true);
     $('.trip-details').prop('hidden', false);
     $('.trip-details').html(`
           <h2>Check Out these Trips</h2>
           <div class=tripId hidden></div>
-          <h3 data-trip-id=${selectedTrip.id}>${selectedTrip.name}</h3>
-          <p>${selectedTrip.shortDescription}</p>
-          <p>${selectedTrip.longDescription}</p>
-          <p>Contributed by: ${selectedTrip.contributedBy}</p>
-          <p>${selectedTrip.location.longAndLat}</p>
-          <p>${selectedTrip.nights} night(s)</p>
-          <p>${selectedTrip.totalMiles} miles</p>
-          <p>Features: ${selectedTrip.features}</p>
-        <h2 class="comments" hidden>Comments</h2>  
-          <p class="comments" hidden>${comments}</p>
-      <button class="delete-trip" type='click'>Delete this Trip</button><br>
-      <button class="edit-trip" type='click'>Edit this Trip</button><br>
-      <button class="show-comments" type='click'>Show Comments</button>
+          <h3 data-trip-id=${data.id}>${data.name}</h3>
+          <p>${data.shortDescription}</p>
+          <p>${data.longDescription}</p>
+          <p>Contributed by: ${data.userContributed.username}</p>
+          <p>${data.location.longAndLat}</p>
+          <p>${data.nights} night(s)</p>
+          <p>${data.totalMileage} miles</p>
+          <p>Features: ${data.features}</p>
       `);
+    if (data.userContributed._id === sessionStorage.getItem("userId")) {
+      $('.trip-details').append(`
+        <button class="delete-trip" type='click'>Delete this Trip</button><br>
+        <button class="edit-trip" type='click'>Edit this Trip</button><br>
+        `)
+      }
 }
 
 function handleClickForTripDetails() {
   $('.recent-trips').on('click', '.trip-name', function() {
-    let selectedTripName = $(this).text()
-    displayTripDetails(selectedTripName);
-
+    let selectedTripId = $(this).data('trip-id');
+    getTripById(selectedTripId, displayTripDetails);
   })
 }
 
@@ -319,7 +186,7 @@ function displayUserProfile(data) {
   $('.users').prop('hidden', true);
   $('.user-profile').prop('hidden', false)
   $('.user-profile').append(`
-    <p>${data.userName}</p>
+    <p>${data.username}</p>
     <p>${data.firstName} ${data.lastName}</p>
     <p>Trips Posted: ${data.tripsPosted}</p>
     `);
@@ -328,6 +195,7 @@ function displayUserProfile(data) {
 function getAndDisplayProfile() {
   $('.users').on ('click', 'p', function() {
     const userId = $(this).data('user-id');
+    console.log(userId);
     getUserById(userId, displayUserProfile);
   }) 
 }
@@ -337,12 +205,17 @@ function getAndDisplayProfile() {
 
 function handlesPostATripButton() {
   $('.post-trip-button').on('click', function() {
+    if (!sessionStorage.getItem("token")) {
+      alert('you are not authorized');
+    } else {
     $('.recent-trips').prop('hidden', true);
     $('.post-trip').prop('hidden', false);
-  })
+    $('.trip-details').prop('hidden', true);
+  }})
 }
 
-function displayPostedTrip() {
+function displayPostedTrip(data) {
+  getTripById(data.id, displayTripDetails);
 }
 
 function postTrip(tripData, callback) {
@@ -364,7 +237,10 @@ function postTrip(tripData, callback) {
     dataType:"json",
     type: 'POST',
     success: callback,
-    contentType: "application/json"
+    contentType: "application/json",
+    beforeSend: function(xhr) {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.getItem("token"));
+    }
 }
   $.ajax(settings);
 }
@@ -381,11 +257,12 @@ function handlesPostingNewTrip() {
     const longDescription = $(".trip-posting-form input[id='long-description']").val();
     const difficulty = $(".trip-posting-form select[id='difficulty']").val();
     const features = $(".trip-posting-form input[id='features']").val();
-    const userContributed = $(".trip-posting-form input[id='user-contributed']").val();
+    const userContributed = sessionStorage.getItem("userId");
     const now = new Date();
     const dateAdded = (`${now.getMonth() + 1}-${now.getDate()}-${now.getFullYear()}`)
     const tripData = {dateAdded, userContributed, totalMileage, name, state, longAndLat, nights, shortDescription, longDescription, difficulty, features}
     postTrip(tripData, displayPostedTrip);
+    $('.post-trip').prop('hidden', true);
   })
 }
 
@@ -414,8 +291,10 @@ function putTripEdits(tripId, keyValuesToBeUpdated, callback) {
   $.ajax(settings);
 }
 
-function displayUpdatedTripDetails() {
-  $('.trip-editing-form').replaceWith('success!?')
+function displayUpdatedTripDetails(data) {
+  console.log('trip updated');
+  $('.trip-editing-view').prop('hidden', true);
+  getTripById(data.id, displayTripDetails);
 }
 
 function submitTripUpdates() {
@@ -431,13 +310,13 @@ function submitTripUpdates() {
     const _longDescription = $(".trip-editing-form input[id='long-description']").val();
     const _difficulty = $(".trip-editing-form select[id='difficulty']").val();
     const _features = $(".trip-editing-form input[id='features']").val();
-    const userContributed = $(".trip-editing-form input[id='user-contributed']").val();
+    const _userContributed = sessionStorage.getItem("userId");
     // const now = new Date();
     const keyValuesToBeUpdated = {
       "id": `${tripId}`
     }
 
-    const updateableData = [{name: _name}, {state: _state}, {longAndLat: _longAndLat}, {nights: _nights}, {totalMileage: _totalMileage}, {shortDescription: _shortDescription}, {longDescription: _longDescription}, {difficulty: _difficulty}, {features: _features} ]
+    const updateableData = [{userContributed: _userContributed}, {name: _name}, {state: _state}, {longAndLat: _longAndLat}, {nights: _nights}, {totalMileage: _totalMileage}, {shortDescription: _shortDescription}, {longDescription: _longDescription}, {difficulty: _difficulty}, {features: _features} ]
     updateableData.forEach(keyValue => {
       if (!(Object.values(keyValue) == null)) {
         keyValuesToBeUpdated[Object.keys(keyValue)] = Object.values(keyValue)[0];
@@ -473,17 +352,16 @@ function handlesClickToDeleteTrip() {
 }
 
 
-// Become a user
+// Become a new user
 function handleClickBecomeUser() {
-  $('.post-user-button').on('click', function() {
-    $('.recent-trips').prop('hidden', true);
-    $('.register-as-user').prop('hidden', false)
+  $('.register').on('click', function() {
+    $('.register-as-user').prop('hidden', false);
   })
 }
 
 function postNewUser(userData, callback) {
   const _data = {
-      userName:`${userData.userName}`,
+      username:`${userData.username}`,
       firstName:`${userData.firstName}`,
       lastName:`${userData.lastName}`,
       password:`${userData.password}`,
@@ -499,42 +377,116 @@ function postNewUser(userData, callback) {
   $.ajax(settings);
 }
 
-function successMessage() {
-  $('.register-as-user').html('registration success');
+function displayNewUser(res) {
+  $('.register-as-user').prop('hidden', true);
+  $('.recent-trips').prop('hidden', true);
+  console.log(res)
+  const userId = res.id;
+  getUserById(userId, displayUserProfile);
 }
 
 function handleSubmitUserInfo() {
   $('.submit-user-info').on('click', function(event) {
     event.preventDefault();
-    const userName = $(".register-as-user input[id='userName']").val();
+    const username = $(".register-as-user input[id='username']").val();
     const firstName = $(".register-as-user input[id='firstName']").val();
     const lastName = $(".register-as-user input[id='lastName']").val();
     const password = $(".register-as-user input[id='password']").val();
-    const userData = {userName, firstName, lastName, password}
-    postNewUser(userData, successMessage);
+    const userData = {username, firstName, lastName, password}
+    postNewUser(userData, displayNewUser);
   })
 }
 
-//
+//login in 
+
+function verifyUser(loginData, callback) {
+  const _loginData = {
+      username:`${loginData.username}`,
+      password:`${loginData.password}`
+    }
+  console.log(_loginData);  
+  const settings = {
+    url:USER_LOGIN,
+    data: JSON.stringify(_loginData) ,
+    dataType: 'json',
+    method: 'POST',
+    contentType: 'application/json',
+    success: callback
+  }
+  $.ajax(settings);
+}
+
+function storeUserInfo(res) {
+  sessionStorage.setItem("token", `${res.authToken}`);
+  sessionStorage.setItem("userId", `${res.userId}`);
+  checkLoginStatus();
+  
+}
+
+function handleClickLogin() {
+  $('.login').on('click', function() {
+    $('.login-area').prop('hidden', false);
+  })
+}
+
+function userlogin() {
+  $('.submit-login-info').on('click', function(event) {
+    event.preventDefault();
+    console.log('heard submit');
+    const username = $(".login-form input[id='username']").val();
+    const password = $(".login-form input[id='password']").val();
+    const loginData = {username, password};
+    verifyUser(loginData, storeUserInfo);
+    $('.login-area').prop('hidden', true);
+    $('.log-out').prop('hidden', false);
+    // storeUserId(username)
+  })
+}
+
+function handlesLogOutClick() {
+  $('.log-out').on('click', function() {
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("userId");
+    console.log('heard');
+    checkLoginStatus();
+    $('.login').prop('hidden', false);
+    $('.register').prop('hidden', false);
+    $('.register-below').prop('hidden', false);
+    $('.log-out').prop('hidden', true);
+
+  })
+}
+
+// function storeUserId
+
+// function accessProtectedArea() {
+//   $('.secret').on('click', function() {
+
+//   })
+// }
 
 
 
 function init () {
+  $(handlesLogOutClick);
+  $(checkLoginStatus);
   $(handleClickToEdit);
   $(handlesClickToDeleteTrip);
   $(handleSubmitUserInfo);
   $(handleClickBecomeUser);
-  $(handleSubmitSearchData);
+  // $(handleSubmitSearchData);
   $(getAndDisplayProfile);
   $(getAndDisplayTrips);
   $(handleClickViewUsers);
-  $(handleClickForComments);
-  $(handleClickToHideComments);
+  // $(handleClickForComments);
+  // $(handleClickToHideComments);
   $(handleClickForTripDetails);
   $(handleSearchTripsButton);
   $(handlesPostingNewTrip);
   $(handlesPostATripButton);
   $(submitTripUpdates);
+  $(handleClickLogin);
+  $(userlogin);
 }
 
 $(init)
