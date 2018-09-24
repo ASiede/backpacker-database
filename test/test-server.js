@@ -64,9 +64,9 @@ chai.use(chaiHttp);
 
 describe('Trips API resource', function() {
 
-  before(function() {
-    return runServer(TEST_DATABASE_URL);
-  });
+  // before(function() {
+  //   return runServer(TEST_DATABASE_URL);
+  // });
 
   // beforeEach(function() {
   //   return seedTripData();
@@ -76,9 +76,9 @@ describe('Trips API resource', function() {
   //   return tearDownDb();
   // });
 
-  after(function() {
-    return closeServer();
-  });
+  // after(function() {
+  //   return closeServer();
+  // });
 
 
   describe('initial page', function() {
