@@ -21,8 +21,8 @@ chai.use(chaiHttp);
 function seedTripData() {
   console.info('seeding trip data');
   return Trip.insertMany(seedTrips);
-  return User.insertMany(seedUsers);
-  return Comment.insertMany(seedComments)
+  // return User.insertMany(seedUsers);
+  // return Comment.insertMany(seedComments)
 }
 
 function seedUserData() {
@@ -36,6 +36,7 @@ function tearDownDb() {
 
 describe('Trips API resource', function() {
   this.timeout(15000);
+
   before(function() {
     return runServer(TEST_DATABASE_URL);
   });
@@ -47,6 +48,7 @@ describe('Trips API resource', function() {
    beforeEach(function() {
     return seedUserData();
   });
+
 
   afterEach(function() {
     return tearDownDb();
