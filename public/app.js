@@ -39,9 +39,9 @@ function getTrips(callback) {
 
 function displayTripsHTML(trip) {
   return `
-  <p data-trip-id=${trip.id} class='trip-name'>${trip.name}</p>
-  <p>${trip.shortDescription}</p>
-  <p>${trip.userContributed.username}</p>
+  <h4 data-trip-id=${trip.id} class='trip-name'>${trip.name}</h4>
+  <p>Short Description: ${trip.shortDescription}</p>
+  <p>Contributed By:${trip.userContributed.username}</p>
   `
 }
 
@@ -100,9 +100,10 @@ function displayTripDetails(data) {
           <p>${data.longDescription}</p>
           <p>Contributed by: ${data.userContributed.username}</p>
           <p>${data.location.longAndLat}</p>
+          <p>${data.location.state}</p>
           <p>${data.nights} night(s)</p>
           <p>${data.totalMileage} miles</p>
-          <p>Features: ${data.features}</p>
+          <p>${data.difficulty}</p>
       `);
     if (data.userContributed._id === sessionStorage.getItem("userId")) {
       $('.trip-details').append(`
@@ -113,8 +114,9 @@ function displayTripDetails(data) {
 }
 
 function handleClickForTripDetails() {
-  $('.recent-trips').on('click', '.trip-name', function() {
+  $('body').on('click', '.trip-name', function() {
     let selectedTripId = $(this).data('trip-id');
+    $('.search-results').prop('hidden', true);
     getTripById(selectedTripId, displayTripDetails);
   })
 }
@@ -122,9 +124,62 @@ function handleClickForTripDetails() {
 //Searching trips
 function handleSearchTripsButton() {
   $('.search-trips').on('click', function() {
-    $('form').prop('hidden', false);
+    $('.recent-trips').prop('hidden', true);
+    $('.search-trips-form').prop('hidden', false);
+    $('.search-trips').prop('hidden', true);
   })
 }
+
+function displaySearchResults(data) {
+  $('.search-trips-form').prop('hidden', true);
+  $('.results-section').prop('hidden', true);
+  const results = data.trips.map((trip) => renderTripHTML(trip));
+  $('.search-results').html(results);
+}
+
+function renderTripHTML (trip) {
+  return `
+  <h4 data-trip-id=${trip.id} class='trip-name'>${trip.name}</h4>
+  <p>Short Description: ${trip.shortDescription}</p>
+  <p>Contributed By:${trip.userContributed.username}</p>
+  `
+}
+
+function getSearchedTrips(tripData, callback) {
+  const query = {
+    name: `${tripData.name}`,
+    "location.state":`${tripData.state}`,
+    minNights: tripData.minNights,
+    maxNights: tripData.maxNights,
+    minMileage: tripData.minMileage,
+    maxMileage: tripData.maxMileage,
+    difficulty: `${tripData.difficulty}`,
+    description: `${tripData.description}`
+  }
+  $.getJSON(TRIPS_SEARCH_URL, query, callback);
+}
+
+function submitSearchParams() {
+  $('.submit-search-data').on('click', function(event) {
+    event.preventDefault();
+    const name = $(".search-trips-form input[id='name']").val();
+    const state = $(".search-trips-form select[id='state']").val();
+    const minNights = $(".search-trips-form input[id='minNights']").val();
+    const maxNights = $(".search-trips-form input[id='maxNights']").val();
+    const minMileage = $(".search-trips-form input[id='minMileage']").val();
+    const maxMileage = $(".search-trips-form input[id='maxMileage']").val();
+    const description = $(".search-trips-form input[id='description']").val();
+    const difficulty = $(".search-trips-form select[id='difficulty']").val();    
+    const tripData = {minMileage, maxMileage, name, state, minNights, maxNights, description, difficulty}
+    getSearchedTrips(tripData, displaySearchResults);
+
+  })
+}  
+
+
+
+
+
 
 //Get users
 
@@ -224,7 +279,7 @@ function postTrip(tripData, callback) {
       "shortDescription": `${tripData.shortDescription}`,
       "longDescription": `${tripData.longDescription}`,
       "difficulty": `${tripData.difficulty}`,
-      "features": `${tripData.features}`,
+      // "features": `${tripData.features}`,
       "userContributed": `${tripData.userContributed}`,
       "totalMileage": `${tripData.totalMileage}`,
       "dateAdded": `${tripData.dateAdded}`
@@ -254,11 +309,14 @@ function handlesPostingNewTrip() {
     const shortDescription = $(".trip-posting-form input[id='short-description']").val();
     const longDescription = $(".trip-posting-form input[id='long-description']").val();
     const difficulty = $(".trip-posting-form select[id='difficulty']").val();
-    const features = $(".trip-posting-form input[id='features']").val();
+    // const features = [];
+    //   $(".trip-posting-form input:checkbox[id='features']:checked").each(function() {
+    //     features.push($(this).val());  
+    //   });     
     const userContributed = sessionStorage.getItem("userId");
     const now = new Date();
     const dateAdded = (`${now.getMonth() + 1}-${now.getDate()}-${now.getFullYear()}`)
-    const tripData = {dateAdded, userContributed, totalMileage, name, state, longAndLat, nights, shortDescription, longDescription, difficulty, features}
+    const tripData = {dateAdded, userContributed, totalMileage, name, state, longAndLat, nights, shortDescription, longDescription, difficulty}
     postTrip(tripData, displayPostedTrip);
     $('.post-trip').prop('hidden', true);
   })
@@ -307,14 +365,20 @@ function submitTripUpdates() {
     const _shortDescription = $(".trip-editing-form input[id='short-description']").val();
     const _longDescription = $(".trip-editing-form input[id='long-description']").val();
     const _difficulty = $(".trip-editing-form select[id='difficulty']").val();
-    const _features = $(".trip-editing-form input[id='features']").val();
+    // const _features = [];
+    //   $(".trip-editing-form input[id='features']").each(function() {
+    //     if($(this).is(':checked')) {
+    //       let checked = ($(this).val());
+    //       features.push(checked);
+    //     }
+    //   });
     const _userContributed = sessionStorage.getItem("userId");
     // const now = new Date();
     const keyValuesToBeUpdated = {
       "id": `${tripId}`
     }
 
-    const updateableData = [{userContributed: _userContributed}, {name: _name}, {state: _state}, {longAndLat: _longAndLat}, {nights: _nights}, {totalMileage: _totalMileage}, {shortDescription: _shortDescription}, {longDescription: _longDescription}, {difficulty: _difficulty}, {features: _features} ]
+    const updateableData = [{userContributed: _userContributed}, {name: _name}, {state: _state}, {longAndLat: _longAndLat}, {nights: _nights}, {totalMileage: _totalMileage}, {shortDescription: _shortDescription}, {longDescription: _longDescription}, {difficulty: _difficulty} ]
     updateableData.forEach(keyValue => {
       if (!(Object.values(keyValue) == null)) {
         keyValuesToBeUpdated[Object.keys(keyValue)] = Object.values(keyValue)[0];
@@ -466,6 +530,7 @@ function handlesLogOutClick() {
 
 
 function init () {
+  $(submitSearchParams);
   $(handlesLogOutClick);
   $(checkLoginStatus);
   $(handleClickToEdit);

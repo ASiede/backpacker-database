@@ -93,17 +93,17 @@
 
 	    <label for="difficulty">Difficulty</label>
 	    <select id="difficulty">
-	    	<option value="Easy">Easy</option>
-	    	<option value="Moderate">Moderate</option>
-	    	<option value="Difficult">Difficult</option>
+	    	<option value="easy">Easy</option>
+	    	<option value="moderate">Moderate</option>
+	    	<option value="difficult">Difficult</option>
 	    </select><br>
 
 		<!-- how to auto fill users -->
-		<label for="features">Features</label><br>
+		<!-- <label for="features">Features</label><br>
 
 		<input type="checkbox" name="features" value="waterfall" id=features>Waterfall<br>
-		<input type="checkbox" name="features" value="" id=features>Old Growth Trees<br>
-		<input type="checkbox" name="features" value="" id=features>Swimming<br>
+		<input type="checkbox" name="features" value="old-growth-trees" id=features>Old Growth Trees<br>
+		<input type="checkbox" name="features" value="swimming" id=features>Swimming<br> -->
 
 		<button class="submit-trip-edits" type="submit">Submit Trip Edits</button>
 	
@@ -191,17 +191,17 @@
 
 	    <label for="difficulty">Difficulty</label>
 	    <select id="difficulty">
-	    	<option value="Easy">Easy</option>
-	    	<option value="Moderate">Moderate</option>
-	    	<option value="Difficult">Difficult</option>
+	    	<option value="easy">Easy</option>
+	    	<option value="moderate">Moderate</option>
+	    	<option value="difficult">Difficult</option>
 	    </select><br>
 
 		<!-- how to auto fill users -->
-		<label for="features">Features</label><br>
+		<!-- <label for="features">Features</label><br>
 
-		<input type="checkbox" name="features" value="waterfall" checked id=features>Waterfall<br>
+		<input type="checkbox" name="features" value="waterfall" id=features>Waterfall<br>
 		<input type="checkbox" name="features" value="old-growth-trees" id=features>Old Growth Trees<br>
-		<input type="checkbox" name="features" value="swimming" id=features>Swimming<br>
+		<input type="checkbox" name="features" value="swimming" id=features>Swimming<br> -->
 		<!-- <input type="text" id="user-contributed" value="5b9dab8987c1e35620d2ac01" required></input><br> -->
 
 		<button class="submit-trip" type="submit">Submit Trip</button>
@@ -226,19 +226,14 @@
 	<h2>User Profile</h2>
 </section>
 
-<button class="search-trips" type='click'>Search Trips</button><br>
-<button class="post-trip-button" type='click'>Post a Trip</button><br>
-<button class="view-users" type='click'>View Users</button><br>
-
-<!-- <button type="click" class="secret">Protected Area</button> -->
-
 <!-- //by state, by name, by nights, by mileage, by difficulty, by contributed by, by features, by content -->
-<form hidden>
+<form class="search-trips-form" hidden>
 	<label for="name">Name</label>
 	<input type="text" id="name"></input><br>
 
 	<label for="state">State</label>
 	<select id="state">
+		<option selected value=""> -- select an option -- </option>
 		<option value="AL">Alabama</option>
 		<option value="AK">Alaska</option>
 		<option value="AZ">Arizona</option>
@@ -292,7 +287,20 @@
 		<option value="WY">Wyoming</option>
 	</select><br>
 
-	<div data-role="rangeslider">
+	<label for=minNights>Min Nights</label><br>
+	<input class="" type="text" name="minNights"></input><br>
+	<label for=maxNights>Max Nights</label><br>
+	<input class="" type="text" name="maxNights"></input><br>
+
+	<label for=minMileage>Min Mileage</label><br>
+	<input class="" type="text" name="minMileage"></input><br>
+	<label for=maxMileage>Max Mileage</label><br>
+	<input class="" type="text" name="maxMileage"></input><br>
+
+
+
+
+	<!-- <div data-role="rangeslider">
         <label for="range-1a">Minimun number of nights:</label><br>
         <input type="range" name="range-1a" id="range-1a" min="0" max="10" value="40" data-popup-enabled="true" data-show-value="true"><br>
         <label for="range-1b">Maximum number of nights:</label><br>
@@ -304,30 +312,38 @@
         <input type="range" name="range-1a" id="range-1a" min="0" max="100" value="40" data-popup-enabled="true" data-show-value="true"><br>
         <label for="range-1b">Maximum mileage:</label><br>
         <input type="range" name="range-1b" id="range-1b" min="0" max="100" value="80" data-popup-enabled="true" data-show-value="true">
-    </div>
+    </div> -->
 
     <label for="difficulty"></label>
     <select id="difficulty">
-    	<option value="Easy">Easy</option>
-    	<option value="Moderate">Moderate</option>
-    	<option value="Difficult">Difficult</option>
+    	<option selected value=""> -- select an option -- </option>
+    	<option value="easy">Easy</option>
+    	<option value="moderate">Moderate</option>
+    	<option value="difficult">Difficult</option>
     </select>
 
 	<!-- how to auto fill users -->
-	<label for="features">Features</label><br>
+	<!-- <label for="features">Features</label><br>
 
 	<input type="checkbox" name="features" value="waterfall" id=features>Waterfall<br>
 	<input type="checkbox" name="features" value="old-growth-trees" id=features>Old Growth Trees<br>
-	<input type="checkbox" name="features" value="swimming" id=features>Swimming<br>
+	<input type="checkbox" name="features" value="swimming" id=features>Swimming<br> -->
 
-	<label>Search descriptions</label>
-	<input type="text"><br>
-
-	<label>Search ID</label>
-	<input id="tripId" type="text" value="5b9845ed6bfe8fba53fb732f"><br>
+	<label for="description">Search descriptions</label>
+	<input id="description" type="text"><br>
 
 	<button class="submit-search-data" type="submit">Submit Search Data</button>
 </form>
+
+<section class="search-results" hidden></section>
+
+<button class="search-trips" type='click'>Search Trips</button><br>
+<button class="post-trip-button" type='click'>Post a Trip</button><br>
+<button class="view-users" type='click'>View Users</button><br>
+
+<!-- <button type="click" class="secret">Protected Area</button> -->
+
+
 
 <div id="loginModal" class="login-area modal" hidden>
 

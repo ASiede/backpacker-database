@@ -25,12 +25,12 @@ const tripSchema = mongoose.Schema({
     "longAndLat": 'string',
     "state": 'string'
   },
-  nights: 'string',
-  totalMileage: 'string',
+  nights: {type: Number},
+  totalMileage: {type: Number},
   shortDescription: 'string',
   longDescription:'string',
   difficulty: 'string',
-  features: ['string'],
+  // features: ['string'],
   dateAdded: 'string',
   comments: [commentSchema]
 });
@@ -100,7 +100,7 @@ tripSchema.methods.serialize = function() {
 		shortDescription: this.shortDescription,
 		longDescription: this.longDescription,
 		difficulty: this.difficulty,
-		features: this.features,
+		// features: this.features,
     comments: this.comments,
     dateAdded: this.dateAdded
     

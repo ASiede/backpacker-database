@@ -56,7 +56,43 @@ app.get('/protected', jwtAuth, (req, res) => {
 
 //Get request to return posts
 app.get("/trips", (req, res) => {
-    Trip.find()
+    
+    //SEARCH PARAMETERS
+    let searchparams = {};
+    
+    const queryparams = ["name", "location.state", "difficulty"];
+    for (let i=0; i<queryparams.length; i++) {
+      let param = queryparams[i];
+      if (req.query[param]) {
+        searchparams[param] = req.query[param];
+      }
+    };
+
+    if (req.query.minNights && req.query.maxNights) {
+      searchparams.nights = {
+        $gte: req.query.minNights,
+        $lte: req.query.maxNights
+      }
+    }
+
+    if (req.query.minMileage && req.query.maxMileage) {
+      searchparams.totalMileage = {
+        $gte: req.query.minMileage,
+        $lte: req.query.maxMileage
+      }
+    }
+
+    if (req.query.description) {
+      searchparams.longDescription = {"$regex": `${req.query.description}`, "$options": "i"} 
+    }
+
+    // const searchedFeatures = req.query.features;
+    // console.log(searchedFeatures);
+    // if (searchedFeatures) {
+    //   searchparams.features = { $all: req.query.features }
+    // }
+
+    Trip.find(searchparams).limit(10)
     .populate('userContributed')
     .then(trips => {
     	res.json({
@@ -106,7 +142,7 @@ app.post('/trips', jwtAuth, jsonParser, (req, res) => {
         	shortDescription: req.body.shortDescription,
         	longDescription: req.body.longDescription,
         	difficulty: req.body.difficulty,
-        	features: req.body.features,
+        	// features: req.body.features,
         })
         .then(trip => res.status(201).json(trip.serialize()))
         .catch(err => {
@@ -137,7 +173,7 @@ app.put('/trips/:id', jsonParser, (req, res) => {
   }
 
   const toUpdate = {};
-  const updateableFields = ['name', 'location', 'nights', 'totalMileage', 'shortDescription', 'longDescription', 'difficulty', 'features'];
+  const updateableFields = ['name', 'location', 'nights', 'totalMileage', 'shortDescription', 'longDescription', 'difficulty'];
 
   updateableFields.forEach(field => {
     if (field in req.body) {
@@ -223,7 +259,7 @@ app.put('/trips/:id', (req, res) => {
   }
 
   const toUpdate = {};
-  const updateableFields = ['name', 'location', 'nights', 'totalMileage', 'shortDescription', 'longDescription', 'difficulty', 'features'];
+  const updateableFields = ['name', 'location', 'nights', 'totalMileage', 'shortDescription', 'longDescription', 'difficulty'];
 
   updateableFields.forEach(field => {
     if (field in req.body) {
