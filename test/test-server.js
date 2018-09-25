@@ -116,6 +116,7 @@ describe('Trips API resource', function() {
     });
   });
 
+
   // describe('POST endpoint', function() {
 
   //   it('should add a new trip', function() {
