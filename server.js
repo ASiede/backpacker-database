@@ -343,7 +343,10 @@ function closeServer() {
 }
 
 if (require.main === module) {
-  runServer(DATABASE_URL).catch(err => console.error(err));
+  app.listen(process.env.PORT || 55862, function() {
+    console.info(`App listening on ${this.address().port}`);
+  });
+  // runServer(DATABASE_URL).catch(err => console.error(err));
 };
 
 module.exports = { app, runServer, closeServer}
