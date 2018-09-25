@@ -132,7 +132,6 @@ app.post('/trips', jwtAuth, jsonParser, (req, res) => {
   User.findById(req.body.userContributed)
     .then( user => { 
       if (user) {
-        console.log(user);
         Trip.create({
         	name: req.body.name,
         	userContributed: user,
@@ -143,6 +142,7 @@ app.post('/trips', jwtAuth, jsonParser, (req, res) => {
         	longDescription: req.body.longDescription,
         	difficulty: req.body.difficulty,
         	// features: req.body.features,
+          dateAdded: req.body.dateAdded
         })
         .then(trip => res.status(201).json(trip.serialize()))
         .catch(err => {

@@ -20,18 +20,41 @@ const tripSchema = mongoose.Schema({
   userContributed: {
     type: mongoose.Schema.Types.ObjectId, ref: 'User'
   },
-  name: 'string',
-  location: {
-    "longAndLat": 'string',
-    "state": 'string'
+  name: {
+    type: String,
+    required: true,
+    unique: true
   },
-  nights: {type: Number},
-  totalMileage: {type: Number},
+  location: {
+    "longAndLat": {
+      type: String,
+      required: true
+      },
+    "state": {
+      type: String,
+      required: true
+      }
+  },
+  nights: {
+    type: Number, 
+    required: true
+    },
+  totalMileage: {
+    type: Number, 
+    required: true
+    },
   shortDescription: 'string',
-  longDescription:'string',
-  difficulty: 'string',
+  longDescription: {
+      type: String,
+      required: true
+      },
+  difficulty: {
+    type: String, 
+    required: true
+    },
   // features: ['string'],
-  dateAdded: 'string',
+  dateAdded: { type: Date },
+  lastUpdated: { type: Date },
   comments: [commentSchema]
 });
 
@@ -102,7 +125,8 @@ tripSchema.methods.serialize = function() {
 		difficulty: this.difficulty,
 		// features: this.features,
     comments: this.comments,
-    dateAdded: this.dateAdded
+    dateAdded: this.dateAdded,
+    dateUpdated: this.dateUpdated
     
 	};	
 };

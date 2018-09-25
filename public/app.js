@@ -42,6 +42,7 @@ function displayTripsHTML(trip) {
   <h4 data-trip-id=${trip.id} class='trip-name'>${trip.name}</h4>
   <p>Short Description: ${trip.shortDescription}</p>
   <p>Contributed By:${trip.userContributed.username}</p>
+  <p>Date Added:${trip.dateAdded}</p>
   `
 }
 
@@ -154,7 +155,7 @@ function getSearchedTrips(tripData, callback) {
     minMileage: tripData.minMileage,
     maxMileage: tripData.maxMileage,
     difficulty: `${tripData.difficulty}`,
-    description: `${tripData.description}`
+    description: `${tripData.description}`,
   }
   $.getJSON(TRIPS_SEARCH_URL, query, callback);
 }
@@ -175,10 +176,6 @@ function submitSearchParams() {
 
   })
 }  
-
-
-
-
 
 
 //Get users
@@ -282,8 +279,9 @@ function postTrip(tripData, callback) {
       // "features": `${tripData.features}`,
       "userContributed": `${tripData.userContributed}`,
       "totalMileage": `${tripData.totalMileage}`,
-      "dateAdded": `${tripData.dateAdded}`
+      "dateAdded": Date.now()
     }
+    console.log(_data.dateAdded)
   const settings = {
     url: TRIPS_SEARCH_URL,
     data: JSON.stringify(_data),
@@ -299,7 +297,7 @@ function postTrip(tripData, callback) {
 }
 
 function handlesPostingNewTrip() {
-  $('.submit-trip').on('click', function(event) {
+  $('.trip-posting-form').on('submit', function(event) {
     event.preventDefault();
     const name = $(".trip-posting-form input[id='name']").val();
     const state = $(".trip-posting-form select[id='state']").val();
@@ -317,6 +315,7 @@ function handlesPostingNewTrip() {
     const now = new Date();
     const dateAdded = (`${now.getMonth() + 1}-${now.getDate()}-${now.getFullYear()}`)
     const tripData = {dateAdded, userContributed, totalMileage, name, state, longAndLat, nights, shortDescription, longDescription, difficulty}
+    console.log(tripData)
     postTrip(tripData, displayPostedTrip);
     $('.post-trip').prop('hidden', true);
   })
@@ -436,7 +435,11 @@ function postNewUser(userData, callback) {
     success: callback,
     contentType: 'application/json'
   }
-  $.ajax(settings);
+  $.ajax(settings)
+    .fail(function(xhr, status, error) {
+        console.log(xhr);
+        alert(`${xhr.responseJSON.location} ${xhr.responseJSON.message}`)
+    });
 }
 
 function displayNewUser(res) {
@@ -448,8 +451,9 @@ function displayNewUser(res) {
 }
 
 function handleSubmitUserInfo() {
-  $('.submit-user-info').on('click', function(event) {
+  $('.user-registration').on('submit', function(event) {
     event.preventDefault();
+    console.log('heard');
     const username = $(".register-as-user input[id='username']").val();
     const firstName = $(".register-as-user input[id='firstName']").val();
     const lastName = $(".register-as-user input[id='lastName']").val();
@@ -475,7 +479,12 @@ function verifyUser(loginData, callback) {
     contentType: 'application/json',
     success: callback
   }
-  $.ajax(settings);
+  $.ajax(settings)
+  .fail(function(xhr, status, error) {
+        console.log(xhr);
+        alert(`Username and/or Password not valid`)
+    });
+
 }
 
 function storeUserInfo(res) {
@@ -492,7 +501,7 @@ function handleClickLogin() {
 }
 
 function userlogin() {
-  $('.submit-login-info').on('click', function(event) {
+  $('.login-form').on('submit', function(event) {
     event.preventDefault();
     console.log('heard submit');
     const username = $(".login-form input[id='username']").val();

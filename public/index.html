@@ -23,6 +23,7 @@
 
 		<label for="state">State</label>
 		<select id="state" >
+			<option disabled selected value> -- select an option -- </option>
 			<option value="AL">Alabama</option>
 			<option value="AK">Alaska</option>
 			<option value="AZ">Arizona</option>
@@ -77,13 +78,13 @@
 		</select><br>
 
 		<label for="long-and-lat">Longitude and Latitude:</label>
-	    <input id="long-and-lat" type="text" value="" ><br>
+	    <input id="long-and-lat" type="string" value="" ><br>
 		
 	    <label for="nights">Number of nights:</label>
-	    <input id="nights" type="text" value="" ><br>
+	    <input id="nights" type="number" value="" ><br>
 
 	    <label for="total-mileage">Total Mileage:</label>
-	    <input id="total-mileage" type="text" value="8" required><br>
+	    <input id="total-mileage" type="number" value="8" required><br>
 	    
 	    <label for="short-description">Short Description:</label>
 	    <input id="short-description" type="text" value=""><br>
@@ -93,6 +94,7 @@
 
 	    <label for="difficulty">Difficulty</label>
 	    <select id="difficulty">
+	    	<option disabled selected value> -- select an option -- </option>
 	    	<option value="easy">Easy</option>
 	    	<option value="moderate">Moderate</option>
 	    	<option value="difficult">Difficult</option>
@@ -115,12 +117,13 @@
 
 <section class="post-trip" hidden>
 	<h2>Fill out the details of your trip below</h2>
-	<form class="trip-posting-form">
+	<form id="post" class="trip-posting-form">
 		<label for="name">Name</label>
 		<input type="text" id="name" value="test" required></input><br>
 
 		<label for="state">State</label>
 		<select id="state" required>
+			<option disabled selected value> -- select an option -- </option>
 			<option value="AL">Alabama</option>
 			<option value="AK">Alaska</option>
 			<option value="AZ">Arizona</option>
@@ -178,10 +181,10 @@
 	    <input id="long-and-lat" type="text" value="test" required><br>
 		
 	    <label for="nights">Number of nights:</label>
-	    <input id="nights" type="text" value="4" required><br>
+	    <input id="nights" type="number" value="4" required><br>
 
 	    <label for="total-mileage">Total Mileage:</label>
-	    <input id="total-mileage" type="text" value="8" required><br>
+	    <input id="total-mileage" type="number" value="8" required><br>
 	    
 	    <label for="short-description">Short Description:</label>
 	    <input id="short-description" type="text" value="test"><br>
@@ -190,7 +193,8 @@
 	    <input id="long-description" type="text" value="test" required></input><br>
 
 	    <label for="difficulty">Difficulty</label>
-	    <select id="difficulty">
+	    <select id="difficulty" required>
+	    	<option disabled selected value> -- select an option -- </option>
 	    	<option value="easy">Easy</option>
 	    	<option value="moderate">Moderate</option>
 	    	<option value="difficult">Difficult</option>
@@ -204,12 +208,10 @@
 		<input type="checkbox" name="features" value="swimming" id=features>Swimming<br> -->
 		<!-- <input type="text" id="user-contributed" value="5b9dab8987c1e35620d2ac01" required></input><br> -->
 
-		<button class="submit-trip" type="submit">Submit Trip</button>
+		<input for="post" class="submit-trip" type="submit">
 	
 	</form>
 </section>
-
-
 
 <section class="users" hidden>
 	<h2>Users</h2>
@@ -350,14 +352,14 @@
 <!-- <section class="login-area" hidden> -->
 	<div class="modal-content">
 		<span class="close">&times;</span>
-		<form class="login-form">
+		<form id="login" class="login-form">
 			<label for="username">Username:</label>
-			<input id="username" type="text" value="test"><br>
+			<input id="username" type="text" value="test" required><br>
 
 			<label for="password">Password:</label>
-			<input id="password" type="text" value="testtesttest"><br>
+			<input id="password" type="text" value="testtesttest" required><br>
 
-			<button type="submit" class="submit-login-info">Submit</button>
+			<input for="login" type="submit" class="submit-login-info">
 		</form>
 	</div>	
 <!-- </section> -->
@@ -366,19 +368,19 @@
 <div id="registerModal" class="register-as-user modal" hidden>
 	<section class="modal-content">
 		<span class="close">&times;</span>
-		<form class="user-registration">
+		<form id="registration" class="user-registration">
 			<label for="username">Username</label>
-			<input id="username" type="text" value="test"><br>
+			<input id="username" type="text" required><br>
 
 			<label for="firstName">First Name:</label>
-			<input id="firstName" type="text" value="test"><br>
+			<input id="firstName" type="text" required><br>
 
 			<label for="lastName">Last Name:</label>
-			<input id="lastName" type="text" value="test"><br>
+			<input id="lastName" type="text" required><br>
 
 			<label for="password">Password</label>
-			<input id="password" type="text" value="test"><br>
-			<button class="submit-user-info" type="submit">Submit this info</button>
+			<input id="password" type="text" required><br>
+			<input for="registration" class="submit-user-info" type="submit">
 		</form>
 	</section>
 </div>	

@@ -59,10 +59,11 @@ router.post('/', jsonParser, (req, res) => {
 
   const sizedFields = {
     username: {
-      min: 1
+      min: 1,
+      max: 15
     },
     password: {
-      min: 10,
+      min: 8,
       // bcrypt truncates after 72 characters, so let's not give the illusion
       // of security by storing extra (unused) info
       max: 72
