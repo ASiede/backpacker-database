@@ -1,9 +1,7 @@
 "use strict"
 
 
-const {DATABASE_URL} = require('../config');
-
-const TRIPS_SEARCH_URL = DATABASE_URL+'/trips';
+const TRIPS_SEARCH_URL = 'http://localhost:8080/trips';
 const USERS_SEARCH_URL = 'http://localhost:8080/users';
 const USER_LOGIN= 'http://localhost:8080/auth/login';
  
