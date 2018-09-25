@@ -34,7 +34,7 @@ function tearDownDb() {
 }
 
 describe('Trips API resource', function() {
-
+  this.timeout(15000);
   before(function() {
     return runServer(TEST_DATABASE_URL);
   });
