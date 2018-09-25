@@ -92,11 +92,7 @@ app.get("/trips", (req, res) => {
     //   searchparams.features = { $all: req.query.features }
     // }
 
-
-
-
-    console.log(searchparams);
-    Trip.find(searchparams)
+    Trip.find(searchparams).limit(10)
     .populate('userContributed')
     .then(trips => {
     	res.json({

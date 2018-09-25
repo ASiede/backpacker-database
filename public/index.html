@@ -233,7 +233,7 @@
 
 	<label for="state">State</label>
 	<select id="state">
-		<option disabled selected value> -- select an option -- </option>
+		<option selected value=""> -- select an option -- </option>
 		<option value="AL">Alabama</option>
 		<option value="AK">Alaska</option>
 		<option value="AZ">Arizona</option>
@@ -316,7 +316,7 @@
 
     <label for="difficulty"></label>
     <select id="difficulty">
-    	<option disabled selected value> -- select an option -- </option>
+    	<option selected value=""> -- select an option -- </option>
     	<option value="easy">Easy</option>
     	<option value="moderate">Moderate</option>
     	<option value="difficult">Difficult</option>
@@ -329,8 +329,8 @@
 	<input type="checkbox" name="features" value="old-growth-trees" id=features>Old Growth Trees<br>
 	<input type="checkbox" name="features" value="swimming" id=features>Swimming<br> -->
 
-	<label>Search descriptions</label>
-	<input type="text"><br>
+	<label for="description">Search descriptions</label>
+	<input id="description" type="text"><br>
 
 	<button class="submit-search-data" type="submit">Submit Search Data</button>
 </form>

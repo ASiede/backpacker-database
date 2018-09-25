@@ -38,9 +38,9 @@ function getTrips(callback) {
 
 function displayTripsHTML(trip) {
   return `
-  <p data-trip-id=${trip.id} class='trip-name'>${trip.name}</p>
-  <p>${trip.shortDescription}</p>
-  <p>${trip.userContributed.username}</p>
+  <h4 data-trip-id=${trip.id} class='trip-name'>${trip.name}</h4>
+  <p>Short Description: ${trip.shortDescription}</p>
+  <p>Contributed By:${trip.userContributed.username}</p>
   `
 }
 
@@ -113,8 +113,9 @@ function displayTripDetails(data) {
 }
 
 function handleClickForTripDetails() {
-  $('.recent-trips').on('click', '.trip-name', function() {
+  $('body').on('click', '.trip-name', function() {
     let selectedTripId = $(this).data('trip-id');
+    $('.search-results').prop('hidden', true);
     getTripById(selectedTripId, displayTripDetails);
   })
 }
@@ -129,7 +130,6 @@ function handleSearchTripsButton() {
 }
 
 function displaySearchResults(data) {
-  console.log(data);
   $('.search-trips-form').prop('hidden', true);
   $('.results-section').prop('hidden', true);
   const results = data.trips.map((trip) => renderTripHTML(trip));
@@ -138,7 +138,9 @@ function displaySearchResults(data) {
 
 function renderTripHTML (trip) {
   return `
-  <p>${trip.name}</p>
+  <h4 data-trip-id=${trip.id} class='trip-name'>${trip.name}</h4>
+  <p>Short Description: ${trip.shortDescription}</p>
+  <p>Contributed By:${trip.userContributed.username}</p>
   `
 }
 
@@ -160,12 +162,12 @@ function submitSearchParams() {
   $('.submit-search-data').on('click', function(event) {
     event.preventDefault();
     const name = $(".search-trips-form input[id='name']").val();
-    const state = $(".tsearch-trips-form select[id='state']").val();
+    const state = $(".search-trips-form select[id='state']").val();
     const minNights = $(".search-trips-form input[id='minNights']").val();
     const maxNights = $(".search-trips-form input[id='maxNights']").val();
     const minMileage = $(".search-trips-form input[id='minMileage']").val();
     const maxMileage = $(".search-trips-form input[id='maxMileage']").val();
-    const description = $(".search-trips-form input[id='long-description']").val();
+    const description = $(".search-trips-form input[id='description']").val();
     const difficulty = $(".search-trips-form select[id='difficulty']").val();    
     const tripData = {minMileage, maxMileage, name, state, minNights, maxNights, description, difficulty}
     getSearchedTrips(tripData, displaySearchResults);
