@@ -88,7 +88,7 @@ describe('Trips API resource', function() {
             expect(trip).to.be.a('object');
             // need to put userContributed back in when figre out
             expect(trip).to.include.keys(
-              'name', 'nights', 'id', 'location', 'totalMileage', 'shortDescription', 'longDescription', 'features');
+              'name', 'nights', 'id', 'location', 'totalMileage', 'shortDescription', 'longDescription', 'userContributed', 'difficulty');
           });
           resTrip = res.body.trips[0];
           return Trip.findById(resTrip.id);
@@ -106,7 +106,7 @@ describe('Trips API resource', function() {
           expect(resTrip.difficulty).to.equal(trip.difficulty);
           expect(resTrip.shortDescription).to.equal(trip.shortDescription);
           expect(resTrip.longDescription).to.equal(trip.longDescription);
-          expect(resTrip.features).to.be.a('array');
+          // expect(resTrip.features).to.be.a('array');
           //error expecting ['lake'] to be ["lake"]
           // expect(resTrip.features).to.equal(trip.features);
         });
