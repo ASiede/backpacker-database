@@ -1,9 +1,9 @@
 "use strict"
 
 
-const TRIPS_SEARCH_URL = 'http://localhost:8080/trips';
-const USERS_SEARCH_URL = 'http://localhost:8080/users';
-const USER_LOGIN= 'http://localhost:8080/auth/login';
+const TRIPS_SEARCH_URL = '/trips';
+const USERS_SEARCH_URL = '/users';
+const USER_LOGIN= '/auth/login';
  
 
 
