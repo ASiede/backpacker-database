@@ -1,0 +1,33 @@
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: lightblue;
+}
+
+header {
+	border: solid 1px navy;
+	text-align: center;
+}
+
+.trip {
+	border: solid 1px navy;
+}
+
+nav {
+	list-style: none;
+	height: 200px;
+	border: solid 1px red;
+}
+
+.container {
+	display: flex;
+	align-items: center;
+}
+
+
+nav p, nav.login-status {
+	background-color: green;
+}

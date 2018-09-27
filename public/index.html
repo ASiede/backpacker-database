@@ -2,14 +2,35 @@
 <html lang="en">
 <head>
 	<title>Backpacker Database</title>
+	<link rel="stylesheet" type="text/css" href="./main.css">	
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
-<body>
-<h1>Backpacker Database</h1>
 
+<body>
+	<header role="banner">
+		<h1>Backpacker Database</h1>
+	</header>
+<nav>
+	<div class="container">
+		<div>Search Trips</div>
+		<div>View Users</div>
+		<div class="login-status">
+			<section class="logged-in" hidden></section>
+			<p class="register-below">Not Registered? Register Below</p>
+		</div>
+	</div>
+</nav>
+
+<!-- <div class="login-status">
+			<section class="logged-in" hidden></section>
+			<button class="log-out" type='click' hidden>Log Out</button>
+			<button class="login" type='click'>Login</button>
+			<p class="register-below">Not Registered? Register Below</p>
+			<button class="register" type='click'>Register as a user</button>
+		</div> -->
 
 <section class="recent-trips">
-<h2>Check out recent backpacking trips users have posted</h2>	
+	<h2>Check out recent backpacking trips users have posted</h2>	
 </section>
 
 <section class="trip-details" hidden>
@@ -383,11 +404,7 @@
 	</section>
 </div>	
 
-<section class="logged-in"></section>
-<button class="log-out" type='click' hidden>Log Out</button>
-<button class="login" type='click'>Login</button>
-<p class="register-below">Not Registered? Register Below</p>
-<button class="register" type='click'>Register as a user</button>
+
 
 <script src="app.js"></script>
 </body>

@@ -57,10 +57,12 @@ function getTrips(callback) {
 
 function displayTripsHTML(trip) {
   return `
-  <h4 data-trip-id=${trip.id} class='trip-name'>${trip.name}</h4>
-  <p>Short Description: ${trip.shortDescription}</p>
-  <p>Contributed By:${trip.userContributed.username}</p>
-  <p>Date Added:${trip.dateAdded}</p>
+  <div class='trip'>
+    <h4 data-trip-id=${trip.id} class='trip-name'>${trip.name}</h4>
+    <p>Short Description: ${trip.shortDescription}</p>
+    <p>Contributed By:${trip.userContributed.username}</p>
+    <p>Date Added:${trip.dateAdded}</p>
+  <div>
   `
 }
 
