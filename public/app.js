@@ -11,6 +11,20 @@ const USERS_SEARCH_URL = 'http://localhost:8080/users';
 const USER_LOGIN= 'http://localhost:8080/auth/login'; 
 
 
+//making sure DOM elements are not visable
+
+function hideOtherDomElements() {
+  $('.recent-trips').prop('hidden', true);
+  $('.trip-details').prop('hidden', true);
+  $('.trip-editing-view').prop('hidden', true);
+  $('.search-results').prop('hidden', true);
+  $('.post-trip').prop('hidden', true);
+  $('.users').prop('hidden', true);
+  $('.user-profile').prop('hidden', true);
+  $('.search-trips-form').prop('hidden', true);
+}
+
+
 //Check to see if logged in
 
 function checkLoginStatus() {
@@ -62,14 +76,12 @@ function getAndDisplayTrips() {
 // function displayComments(comment) {
 //   return `<p class="comments" hidden>${comment.content}</p>`
 // }
-
 // function handleClickForComments(data) {
 //   $('body').on('click', '.show-comments', function(data) {
 //     $('.comments').prop('hidden', false);
 //     $('.show-comments').replaceWith(`<button type="click" class="hide-comments">Hide Comments</button>`);
 //   });
 // }
-
 // function handleClickToHideComments() {
 //   $('body').on('click', '.hide-comments', function(event) {
 //     event.preventDefault();
@@ -85,16 +97,9 @@ function getTripById(selectedTripId, callback) {
   $.getJSON(`${TRIPS_SEARCH_URL}/${selectedTripId}`, callback)
 }
 
-// function handleSubmitSearchData() {
-//   $('.submit-search-data').on('click', function(event) {
-//     event.preventDefault();
-//     const tripId = $("input[id='tripId']").val();
-//     getTripById(tripId);
-//   })
-// }
-
 function displayTripDetails(data) {
     // const comments = selectedTrip.comments.map(comment => displayComments(comment)).join('');
+    hideOtherDomElements();
     $('.recent-trips').prop('hidden', true);
     $('.trip-details').prop('hidden', false);
     $('.trip-details').html(`
@@ -181,7 +186,6 @@ function submitSearchParams() {
   })
 }  
 
-
 //Get users
 
 function getUsers(callback) {
@@ -253,7 +257,6 @@ function getAndDisplayProfile() {
     getUserById(userId, displayUserProfile);
   }) 
 }
-
 
 //Posting a trip
 
@@ -531,16 +534,6 @@ function handlesLogOutClick() {
 
   })
 }
-
-// function storeUserId
-
-// function accessProtectedArea() {
-//   $('.secret').on('click', function() {
-
-//   })
-// }
-
-
 
 function init () {
   $(submitSearchParams);
