@@ -111,8 +111,6 @@ tripSchema.pre('find', function(next) {
 
 
 tripSchema.methods.serialize = function() {
-  // console.log(user);
-  // console.log(this.userContributed.username);
 	return {
 		id: this._id,
 		name: this.name,
