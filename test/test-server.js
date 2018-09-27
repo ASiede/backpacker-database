@@ -117,75 +117,77 @@ describe('Trips API resource', function() {
   });
 
 
-  // describe('POST endpoint', function() {
+  describe('POST endpoint', function() {
 
-  //   it('should add a new trip', function() {
+    it('should add a new trip', function() {
 
-  //     const newTrip = {
-  //       userContributed: "5b958af16bfe8fba53fb5fc6",
-  //       name: "Super cool Trip",
-  //       location: {
-  //         "longAndLat": "45.5122° N, 122.6587° W",
-  //         "state": "CA"
-  //       },
-  //       nights: "3",
-  //       totalMileage: "9",
-  //       shortDescription: "Fun trip",
-  //       longDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  //       difficulty: "easy",
-  //       features: ["wildflowers"]
-  //     };
+      const newTrip = {
+        userContributed: "5b958af16bfe8fba53fb5fc6",
+        name: "Super cool Trip",
+        location: {
+          "longAndLat": "45.5122° N, 122.6587° W",
+          "state": "CA"
+        },
+        nights: "3",
+        totalMileage: "9",
+        shortDescription: "Fun trip",
+        longDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        difficulty: "easy",
+        features: ["wildflowers"]
+      };
 
-  //     //authorize user
+      //authorize user
       
-  //     const userData = {"username": "tnorgay", "password": "everesteverest"}
+      const userData = {"username": "tnorgay", "password": "everesteverest"}
       
-  //     return chai.request(app)
-  //       .get('/users/')
-  //       .then(function(res) {
-  //         return chai.request(app)
-  //           .post('/auth/login')
-  //           .send(userData)
-  //           .then(function(res) {
-  //             return chai.request(app)
-  //             .post('/trips')
-  //             .send(newTrip)
-  //             .then(function(res) {
-  //               expect(res).to.have.status(201);
-  //               expect(res).to.be.json;
-  //               expect(res.body).to.be.a('object');
-  //               expect(res.body).to.include.keys(
-  //                 'id', 'name', 'location', 'nights', 'totalMileage', 'shortDescription', 'longDescription', 'features');
-  //               expect(res.body.id).to.not.be.null;
-  //               expect(res.body.name).to.equal(newTrip.name);
-  //               //below isn't working
-  //               // expect(res.body.location).to.equal(newTrip.location);
-  //               expect(res.body.nights).to.equal(newTrip.nights);
-  //               expect(res.body.totalMileage).to.equal(newTrip.totalMileage);
-  //               expect(res.body.shortDescription).to.equal(newTrip.shortDescription);
-  //               expect(res.body.longDescription).to.equal(newTrip.longDescription);
-  //               expect(res.body.difficulty).to.equal(newTrip.difficulty);
-  //               //something about arrays not equalling each other
-  //               // expect(res.body.features).to.contain(newTrip.features);
+      return chai.request(app)
+        .get('/users/')
+        .then(function(res) {
+          console.log(res.status);
+          return chai.request(app)
+            .post('/auth/login')
+            .send(userData)
+            .then(function(res) {
+              console.log(res.status)
+              return chai.request(app)
+              .post('/trips')
+              .send(newTrip)
+              .then(function(res) {
+                expect(res).to.have.status(201);
+                expect(res).to.be.json;
+                expect(res.body).to.be.a('object');
+                expect(res.body).to.include.keys(
+                  'id', 'name', 'location', 'nights', 'totalMileage', 'shortDescription', 'longDescription', 'features');
+                expect(res.body.id).to.not.be.null;
+                expect(res.body.name).to.equal(newTrip.name);
+                //below isn't working
+                // expect(res.body.location).to.equal(newTrip.location);
+                expect(res.body.nights).to.equal(newTrip.nights);
+                expect(res.body.totalMileage).to.equal(newTrip.totalMileage);
+                expect(res.body.shortDescription).to.equal(newTrip.shortDescription);
+                expect(res.body.longDescription).to.equal(newTrip.longDescription);
+                expect(res.body.difficulty).to.equal(newTrip.difficulty);
+                //something about arrays not equalling each other
+                // expect(res.body.features).to.contain(newTrip.features);
 
-  //               return Trip.findById(res.body.id);
-  //             })
-  //             .then(function(trip) {
-  //               expect(trip.name).to.equal(newTrip.name);
-  //               expect(trip.nights).to.equal(newTrip.nights);
-  //               expect(trip.totalMileage).to.equal(newTrip.totalMileage);
-  //               expect(trip.shortDescription).to.equal(newTrip.shortDescription);
-  //               expect(trip.longDescription).to.equal(newTrip.longDescription);
-  //               expect(trip.difficulty).to.equal(newTrip.difficulty);
-  //               expect(trip.features).to.contain(newTrip.features);
+                return Trip.findById(res.body.id);
+              })
+              .then(function(trip) {
+                expect(trip.name).to.equal(newTrip.name);
+                expect(trip.nights).to.equal(newTrip.nights);
+                expect(trip.totalMileage).to.equal(newTrip.totalMileage);
+                expect(trip.shortDescription).to.equal(newTrip.shortDescription);
+                expect(trip.longDescription).to.equal(newTrip.longDescription);
+                expect(trip.difficulty).to.equal(newTrip.difficulty);
+                expect(trip.features).to.contain(newTrip.features);
 
-  //               expect(trip.location.longAndLat).to.equal(newTrip.location.longAndLat);
-  //               expect(trip.location.state).to.equal(newTrip.location.state);
-  //           })
-  //       })
-  //       });
-  //   });
-  // });
+                expect(trip.location.longAndLat).to.equal(newTrip.location.longAndLat);
+                expect(trip.location.state).to.equal(newTrip.location.state);
+            })
+        })
+        });
+    });
+  });
 
 //PUT endpoint
   describe('PUT endpoint', function() {

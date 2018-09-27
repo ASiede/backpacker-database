@@ -40,7 +40,7 @@ passport.use(jwtStrategy);
 
 
 
-app.use('/users/', usersRouter);
+app.use('/users', usersRouter);
 app.use('/auth/', authRouter);
 
 
