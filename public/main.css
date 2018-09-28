@@ -4,7 +4,7 @@
 }
 
 body {
-	background-color: lightblue;
+	/*background-color: lightblue;*/
 }
 
 header {
@@ -15,19 +15,37 @@ header {
 .trip {
 	border: solid 1px navy;
 }
-
+/*
 nav {
 	list-style: none;
 	height: 200px;
 	border: solid 1px red;
-}
+}*/
 
-.container {
+nav {
+	border: solid 1px navy;
 	display: flex;
+	justify-content: space-around;
 	align-items: center;
 }
 
+.login-status {
+	border: solid 1px navy;
+	text-align: center;
+
+}
 
 nav p, nav.login-status {
-	background-color: green;
+	/*background-color: green;*/
+}
+
+.nav-item {
+	border: solid 1px green;
+	margin: 10px;
+	padding: 20px;
+}
+
+.nav-item:hover {
+	cursor: pointer;
+	/*background-color: red;*/
 }

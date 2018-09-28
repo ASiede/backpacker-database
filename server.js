@@ -63,7 +63,8 @@ app.get("/trips", (req, res) => {
     const queryparams = ["name", "location.state", "difficulty"];
     for (let i=0; i<queryparams.length; i++) {
       let param = queryparams[i];
-      if (req.query[param]) {
+      console.log(req.query[param])
+      if (req.query[param]){
         searchparams[param] = req.query[param];
       }
     };
@@ -91,7 +92,7 @@ app.get("/trips", (req, res) => {
     // if (searchedFeatures) {
     //   searchparams.features = { $all: req.query.features }
     // }
-
+    console.log(searchparams);
     Trip.find(searchparams).limit(10)
     .populate('userContributed')
     .then(trips => {
@@ -132,6 +133,7 @@ app.post('/trips', jwtAuth, jsonParser, (req, res) => {
   User.findById(req.body.userContributed)
     .then( user => { 
       if (user) {
+        console.log(user)
         Trip.create({
         	name: req.body.name,
         	userContributed: user,
@@ -148,7 +150,8 @@ app.post('/trips', jwtAuth, jsonParser, (req, res) => {
         .catch(err => {
           console.error(err);
           res.status(500).json({ message: 'Internal server error' });
-        });
+        })
+
       } else {
           const message = `User not found`;
           console.error(message);
@@ -158,7 +161,7 @@ app.post('/trips', jwtAuth, jsonParser, (req, res) => {
     .catch(err => {
       console.error(err);
       res.status(500).json({ error: 'Internal server errorrrrr' });
-    });
+    })
 });
 
 //Put to update trip
