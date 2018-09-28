@@ -1,0 +1,51 @@
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	/*background-color: lightblue;*/
+}
+
+header {
+	border: solid 1px navy;
+	text-align: center;
+}
+
+.trip {
+	border: solid 1px navy;
+}
+/*
+nav {
+	list-style: none;
+	height: 200px;
+	border: solid 1px red;
+}*/
+
+nav {
+	border: solid 1px navy;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.login-status {
+	border: solid 1px navy;
+	text-align: center;
+
+}
+
+nav p, nav.login-status {
+	/*background-color: green;*/
+}
+
+.nav-item {
+	border: solid 1px green;
+	margin: 10px;
+	padding: 20px;
+}
+
+.nav-item:hover {
+	cursor: pointer;
+	/*background-color: red;*/
+}
