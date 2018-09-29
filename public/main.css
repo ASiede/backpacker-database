@@ -5,47 +5,163 @@
 
 body {
 	/*background-color: lightblue;*/
+	margin:0;
 }
 
 header {
-	border: solid 1px navy;
+	/*border: solid 1px navy;*/
 	text-align: center;
-}
-
-.trip {
-	border: solid 1px navy;
-}
-/*
-nav {
-	list-style: none;
-	height: 200px;
-	border: solid 1px red;
-}*/
-
-nav {
-	border: solid 1px navy;
 	display: flex;
-	justify-content: space-around;
+	/*justify-content: center;*/
 	align-items: center;
 }
 
+.recent-trips h2 {
+	margin-left: 20px;
+}
+.trip, .trip-details {
+	border: solid 1px navy;
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-top: 15px;
+	border-radius: 2%;
+	padding: 10px;
+
+	-webkit-box-shadow: 3px 3px 5px 6px #ccc;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+  	-moz-box-shadow: 3px 3px 5px 6px #ccc;  /* Firefox 3.5 - 3.6 */
+  	box-shadow: 3px 3px 5px 6px #ccc;  /* Opera 10.5, IE 9, Firefox 4+, Chrome 6+, iOS 5 */
+}
+
+.long-description {
+	background-color: lightblue;
+}
+
+nav {
+	/*margin-top: 10px;*/
+	border-top: solid 1px navy;
+	/*border-right: solid 1px navy;*/
+	/*border-left: solid 1px navy;*/
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-direction: column;
+	background-color: lightgreen;
+}
+
+h1 {
+	margin: auto;
+}
 .login-status {
 	border: solid 1px navy;
 	text-align: center;
-
+	margin-left: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-right: 10px;
 }
 
-nav p, nav.login-status {
-	/*background-color: green;*/
-}
 
 .nav-item {
-	border: solid 1px green;
-	margin: 10px;
-	padding: 20px;
+	border-bottom: solid 1px green;
+	width: 100%;
+	text-align: center;
+	padding-top: 15px;
+	padding-bottom: 15px;
+
+	
 }
 
-.nav-item:hover {
+.nav-item:hover, .nav-item:focus {
 	cursor: pointer;
-	/*background-color: red;*/
+	background-color: lightgrey;
 }
+
+
+/****************************************** 
+				SEARCHING TRIPS 
+******************************************/
+.search-trips-form {
+	margin: 20px;
+	display: flex;
+	display:hidden;
+	flex-direction: column;
+	background-color: black;
+	color: white;
+	border-radius: 5%;
+}
+.search-trips-form h2 {
+	text-align: center;
+}
+.search-trips-form div {
+	margin: 10px;
+
+}
+
+.search-trips-form h3 {
+	text-align: center;
+	background-color: lightblue;
+	width: 100%;
+	padding: 10px;
+	margin:0px;
+	border-top: solid 2px navy;
+	border-bottom: solid 2px navy;
+
+}
+
+.search-trips-form h3:hover, .search-trips-form h3:focus {
+	cursor: pointer;
+	background-color: teal;
+}
+
+.search-trips-form input, .search-trips-form select {
+	max-width: 100px;	
+}
+
+.submit-search-data {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+input[type="number"] {
+	max-width: 30px;
+}
+
+
+/****************************************** 
+				POSTING TRIPS
+******************************************/
+
+
+.trip-posting-form, .trip-editing-view {
+	border: 1px solid red;
+	margin: 20px;
+	padding: 15px;
+}
+
+.trip-posting-form div, .trip-editing-view div {
+	margin: 5px;
+	border: 1px solid green;
+	padding: 5px;
+}
+
+textarea {
+	width: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*Media Queries*/
+

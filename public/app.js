@@ -1,14 +1,14 @@
 "use strict"
 
-FOR DEPLOYMENT ON HEROKU
-const TRIPS_SEARCH_URL = '/trips';
-const USERS_SEARCH_URL = '/users';
-const USER_LOGIN= '/auth/login';
+//FOR DEPLOYMENT ON HEROKU
+// const TRIPS_SEARCH_URL = '/trips';
+// const USERS_SEARCH_URL = '/users';
+// const USER_LOGIN= '/auth/login';
 
 //FOR LOCAL DEV ON LOCAL SERVER
-// const TRIPS_SEARCH_URL = 'http://localhost:8080/trips';
-// const USERS_SEARCH_URL = 'http://localhost:8080/users';
-// const USER_LOGIN= 'http://localhost:8080/auth/login'; 
+const TRIPS_SEARCH_URL = 'http://localhost:8080/trips';
+const USERS_SEARCH_URL = 'http://localhost:8080/users';
+const USER_LOGIN= 'http://localhost:8080/auth/login'; 
 
 
 //making sure DOM elements are not visable
@@ -21,7 +21,7 @@ function hideOtherDomElements() {
   $('.post-trip').prop('hidden', true);
   $('.users').prop('hidden', true);
   $('.user-profile').prop('hidden', true);
-  $('.search-trips-form').prop('hidden', true);
+  $('.search').prop('hidden', true);
 }
 
 
@@ -63,8 +63,8 @@ function displayTripsHTML(trip) {
   <div class='trip' data-trip-id=${trip.id}>
     <h4  class='trip-name'>${trip.name}</h4>
     <p>Short Description: ${trip.shortDescription}</p>
-    <p>Contributed By:${trip.userContributed.username}</p>
-    <p>Date Added:${shortenedDate}</p>
+    <p>Contributed By: ${trip.userContributed.username}</p>
+    <p>Date Added: ${shortenedDate}</p>
   <div>
   `
 }
@@ -114,17 +114,16 @@ function displayTripDetails(data) {
     $('.recent-trips').prop('hidden', true);
     $('.trip-details').prop('hidden', false);
     $('.trip-details').html(`
-          <h2>Check Out these Trips</h2>
           <div class=tripId hidden></div>
           <h3 data-trip-id=${data.id}>${data.name}</h3>
           <p>Quick Description: ${data.shortDescription}</p>
-          <p>Detailed Description${data.longDescription}</p>
           <p>Contributed by: ${data.userContributed.username}</p>
           <p>Exact Trailhead location: ${data.location.longAndLat}</p>
           <p>State: ${data.location.state}</p>
           <p>Number of Nights: ${data.nights} night(s)</p>
           <p>Total Mileage: ${data.totalMileage} miles</p>
           <p>Difficulty Rating: ${data.difficulty}</p>
+          <p class="long-description">Detailed Description${data.longDescription}</p>
       `);
     if (data.userContributed._id === sessionStorage.getItem("userId")) {
       $('.trip-details').append(`
@@ -147,14 +146,15 @@ function handleSearchTripsButton() {
   $('.search-trips').on('click', function() {
     hideOtherDomElements();
     // $('.recent-trips').prop('hidden', true);
-    $('.search-trips-form').prop('hidden', false);
+    $('.search').prop('hidden', false);
 
     // $('.search-trips').prop('hidden', true);
   })
 }
 
 function displaySearchResults(data) {
-  $('.search-trips-form').prop('hidden', true);
+  hideOtherDomElements();
+  // $('.search-trips-form').prop('hidden', true);
   $('.search-results').prop('hidden', false )
   let results = '<p>No results. Try again</p>'
   if (data.trips.length>0) {
@@ -202,6 +202,14 @@ function submitSearchParams() {
 
   })
 }  
+
+//Search form field sliding
+
+function showHideSearchField() {
+  $('.search-trips-form h3').on('click', function() {
+    $(this.nextElementSibling).slideToggle();
+  })
+}
 
 //Get users
 
@@ -350,11 +358,15 @@ function handlesPostingNewTrip() {
 
 function updateTripDetails() {
   $('.trip-editing-view').prop('hidden', false);
+  
+  
+
 }
 
 function handleClickToEdit() {
   $('.trip-details').on('click', '.edit-trip', function() {
     updateTripDetails();
+    
   })
 }
 
@@ -563,6 +575,7 @@ function handlesLogOutClick() {
 }
 
 function init () {
+  $(showHideSearchField);
   $(handleClickBrowseRecent)
   $(submitSearchParams);
   $(handlesLogOutClick);
