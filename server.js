@@ -37,9 +37,6 @@ app.use(function(req, res, next) {
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
-
-
-
 app.use('/users', usersRouter);
 app.use('/auth/', authRouter);
 
@@ -93,7 +90,7 @@ app.get("/trips", (req, res) => {
     //   searchparams.features = { $all: req.query.features }
     // }
     console.log(searchparams);
-    Trip.find(searchparams).limit(10)
+    Trip.find(searchparams).limit(10).sort({dateAdded: -1})
     .populate('userContributed')
     .then(trips => {
     	res.json({
@@ -128,12 +125,18 @@ app.post('/trips', jwtAuth, jsonParser, (req, res) => {
       console.error(message);
       return res.status(400).send(message);
     }
+    // } else if (Trip.find({name: `${req.body.name}`})) {
+    //       console.error('smae name');
+    //       return res.status(400).json({ message: 'same name'});
+    //     }
+
   }
 
   User.findById(req.body.userContributed)
     .then( user => { 
       if (user) {
-        console.log(user)
+
+        
         Trip.create({
         	name: req.body.name,
         	userContributed: user,
