@@ -71,7 +71,7 @@ function displayTripsHTML(trip) {
 
 function displayTrips(data) {
   const results = data.trips.map((trip) => displayTripsHTML(trip));
-  $('.recent-trips').append(results);
+  $('.recent-trips').html(results);
   // trips = data;
 }
 
@@ -98,6 +98,7 @@ function getAndDisplayTrips() {
 function handleClickBrowseRecent() {
   $('.browse-recent').on('click', function(){
     hideOtherDomElements();
+    getAndDisplayTrips();
     $('.recent-trips').prop('hidden', false);
   })
 }
@@ -123,7 +124,7 @@ function displayTripDetails(data) {
           <p>Number of Nights: ${data.nights} night(s)</p>
           <p>Total Mileage: ${data.totalMileage} miles</p>
           <p>Difficulty Rating: ${data.difficulty}</p>
-          <p class="long-description">Detailed Description${data.longDescription}</p>
+          <p class="long-description">Detailed Description: ${data.longDescription}</p>
       `);
     if (data.userContributed._id === sessionStorage.getItem("userId")) {
       $('.trip-details').append(`
@@ -199,7 +200,9 @@ function submitSearchParams() {
     if (difficulty.length < 1) {difficulty = undefined}    
     const tripData = {minMileage, maxMileage, name, state, minNights, maxNights, description, difficulty}
     getSearchedTrips(tripData, displaySearchResults);
-
+    $('.search-trips-form div input').val('');
+    $('.search-trips-form select').val('');
+    $('.search-trips-form textarea').val('');
   })
 }  
 
@@ -293,6 +296,7 @@ function handlesPostATripButton() {
     hideOtherDomElements();  
     // $('.recent-trips').prop('hidden', true);
     $('.post-trip').prop('hidden', false);
+
     // $('.trip-details').prop('hidden', true);
   }})
 }
@@ -326,8 +330,29 @@ function postTrip(tripData, callback) {
         xhr.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.getItem("token"));
     }
 }
-  $.ajax(settings);
+  $.ajax(settings)
+    .fail(function(xhr, status, error) {
+        console.log(xhr);
+        alert(`${xhr.responseJSON.message}`)
+    });
 }
+
+function checkName(data) {
+  console(data.name)
+  if (data.name) {
+    console(data.name)
+    alert('sorry that name is already taken');
+  }
+}
+
+// function getSearchedTrips(name) {
+//   const query = {
+//     name: name,
+//   }
+//   $.getJSON(TRIPS_SEARCH_URL, query, checkName);
+// }
+
+
 
 function handlesPostingNewTrip() {
   $('.trip-posting-form').on('submit', function(event) {
@@ -338,7 +363,7 @@ function handlesPostingNewTrip() {
     const nights = $(".trip-posting-form input[id='nights']").val();
     const totalMileage = $(".trip-posting-form input[id='total-mileage']").val();
     const shortDescription = $(".trip-posting-form input[id='short-description']").val();
-    const longDescription = $(".trip-posting-form input[id='long-description']").val();
+    const longDescription = $(".trip-posting-form textarea").val();
     const difficulty = $(".trip-posting-form select[id='difficulty']").val();
     // const features = [];
     //   $(".trip-posting-form input:checkbox[id='features']:checked").each(function() {
@@ -349,24 +374,55 @@ function handlesPostingNewTrip() {
     const dateAdded = (`${now.getMonth() + 1}-${now.getDate()}-${now.getFullYear()}`)
     const tripData = {dateAdded, userContributed, totalMileage, name, state, longAndLat, nights, shortDescription, longDescription, difficulty}
     console.log(tripData)
+
     postTrip(tripData, displayPostedTrip);
     $('.post-trip').prop('hidden', true);
+    //clearing the form
+    $('.trip-posting-form div input').val('');
+    $('.trip-posting-form select').val('');
+    $('.trip-posting-form textarea').val('');
   })
 }
+
+// function focustout() {
+//   $(".trip-posting-form input[id='name']").on('focusout', function(){
+//     const inputName = $(".trip-posting-form input[id='name']").val();
+//     checkIfNameIsTaken(name, checkName)
+//     console.log('i heard that')
+//   })
+// }
+
+// function checkIfNameIsTaken(inputName, callback) {
+//     console.log(inputName);
+//     const query = {
+//       "name": inputName
+//      }
+//      console.log(query);
+//      $.getJSON(TRIPS_SEARCH_URL, query, callback);
+//    }
+
+// function checkName(data) {
+//   console.log(data)
+//   if (data.trips.length>0) {
+//     alert('sorry that name is already taken');
+//   }
+// }
+
+
+
+
 
 //Editing a trip
 
 function updateTripDetails() {
   $('.trip-editing-view').prop('hidden', false);
-  
-  
 
 }
 
 function handleClickToEdit() {
   $('.trip-details').on('click', '.edit-trip', function() {
     updateTripDetails();
-    
+
   })
 }
 
@@ -384,7 +440,6 @@ function putTripEdits(tripId, keyValuesToBeUpdated, callback) {
 }
 
 function displayUpdatedTripDetails(data) {
-  console.log('trip updated');
   $('.trip-editing-view').prop('hidden', true);
   getTripById(data.id, displayTripDetails);
 }
@@ -399,15 +454,8 @@ function submitTripUpdates() {
     const _nights = $(".trip-editing-form input[id='nights']").val();
     const _totalMileage = $(".trip-editing-form input[id='total-mileage']").val();
     const _shortDescription = $(".trip-editing-form input[id='short-description']").val();
-    const _longDescription = $(".trip-editing-form input[id='long-description']").val();
+    const _longDescription = $(".trip-editing-form textarea[id='long-description']").val();
     const _difficulty = $(".trip-editing-form select[id='difficulty']").val();
-    // const _features = [];
-    //   $(".trip-editing-form input[id='features']").each(function() {
-    //     if($(this).is(':checked')) {
-    //       let checked = ($(this).val());
-    //       features.push(checked);
-    //     }
-    //   });
     const _userContributed = sessionStorage.getItem("userId");
     // const now = new Date();
     const keyValuesToBeUpdated = {
@@ -416,11 +464,15 @@ function submitTripUpdates() {
 
     const updateableData = [{userContributed: _userContributed}, {name: _name}, {state: _state}, {longAndLat: _longAndLat}, {nights: _nights}, {totalMileage: _totalMileage}, {shortDescription: _shortDescription}, {longDescription: _longDescription}, {difficulty: _difficulty} ]
     updateableData.forEach(keyValue => {
-      if (!(Object.values(keyValue) == null)) {
+      console.log(Object.values(keyValue)[0])
+      if (!(Object.values(keyValue)[0] === "") && !(Object.values(keyValue)[0] === null)) {
         keyValuesToBeUpdated[Object.keys(keyValue)] = Object.values(keyValue)[0];
       }
     });
     putTripEdits(tripId, keyValuesToBeUpdated, displayUpdatedTripDetails);
+    $('.submit-trip-editsdiv input').val('');
+    $('.submit-trip-edits select').val('');
+    $('.submit-trip-edits textarea').val('');
   })
 }
 
@@ -439,7 +491,9 @@ function deleteTrip(tripId, callback) {
 }
 
 function displayDeleteSuccess() {
-  $('.trip-details').html('trip has been deleted')
+  hideOtherDomElements();
+  $('.trip-details').prop('hidden', false);
+  $('.trip-details').html('Your trip has been deleted')
 }
 
 function handlesClickToDeleteTrip() {
@@ -575,6 +629,7 @@ function handlesLogOutClick() {
 }
 
 function init () {
+  // $(focustout);
   $(showHideSearchField);
   $(handleClickBrowseRecent)
   $(submitSearchParams);
