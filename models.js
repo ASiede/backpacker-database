@@ -76,6 +76,7 @@ const userSchema = mongoose.Schema({
 userSchema.methods.serialize = function() {
   return {
     id: this._id,
+    password: this.password,
     username: this.username || '',
     firstName: this.firstName || '',
     lastName: this.lastName || '',

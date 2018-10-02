@@ -496,6 +496,7 @@ function postNewUser(userData, callback) {
 }
 
 function displayUserProfile(data) {
+  console.log(data);
   $('.users').prop('hidden', true);
   $('.user-profile').prop('hidden', false)
   $('.user-profile').append(`
@@ -512,6 +513,10 @@ function displayNewUser(res) {
   $('.login-area').prop('hidden', false);
   $('.register-as-user').prop('hidden', true);
   const userId = res.id;
+  const username = res.username;
+  // const password = res.password;
+  // const loginData = {username, password}
+  // verifyUser(loginData, storeUserInfo);
   getUserById(userId, displayUserProfile);
 }
 

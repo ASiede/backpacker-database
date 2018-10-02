@@ -8,6 +8,11 @@ body {
 	background-color: rgba(10, 122, 166, 1);
 	/*background-color: rgba(10, 122, 166, 0.1);;*/
 	margin:0;
+	/*background-image: url('https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&cs=tinysrgb&h=650&w=940');*/
+	background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Moraine_Lake_17092005.jpg/1024px-Moraine_Lake_17092005.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+
 }
 
 header {
@@ -17,9 +22,18 @@ header {
 	display: flex;
 	align-items: center;
 	border-bottom: 3px solid rgba(10, 122, 166, 1);
+	opacity: 0.75;
 }
 h1 {
 	margin: auto;
+}
+
+main {
+	/*background-image: url('https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&cs=tinysrgb&h=650&w=940');
+	background-repeat: no-repeat;
+	background-size: cover;*/
+	max-height: 1000px;
+	overflow: scroll;
 
 }
 /****************************************** 
@@ -35,6 +49,7 @@ h1 {
 	margin-right: 10px;
 	padding: 10px;
 	background-color: white;
+	
 }
 
 .login-status p {
@@ -87,6 +102,7 @@ nav {
 	padding: 10px;
 	background-color: white;
 	width: 80%;
+	opacity: 0.85;
 
 
 	/*-webkit-box-shadow: 3px 3px 5px 6px #ccc;  
