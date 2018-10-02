@@ -287,14 +287,19 @@ textarea {
 
 
 /* Smartphones (portrait) ----------- */
-@media screen and (max-width : 451px) {
-	header {
-		border-top: orange;
-	}
-}
+
+/*@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 667px) 
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (orientation: portrait) { 
+  	header {
+  		background-color: orange;
+  	}
+}*/
 
 /* Desktops and laptops ----------- */
-@media screen  and (min-width : 451px) {
+@media screen and (min-width : 451px) {
 	h1 {
 		font-size: 50px;
 	}
