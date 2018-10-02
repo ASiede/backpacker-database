@@ -62,20 +62,30 @@ app.get("/trips", (req, res) => {
       let param = queryparams[i];
       console.log(req.query[param])
       if (req.query[param]){
-        searchparams[param] = req.query[param];
+        searchparams[param] = req.query[param]
       }
     };
 
-    if (req.query.minNights && req.query.maxNights) {
+    if (req.query.minNights) {
       searchparams.nights = {
-        $gte: req.query.minNights,
+        $gte: req.query.minNights
+      }
+    }
+
+    if (req.query.maxNights) {
+      searchparams.nights = {
         $lte: req.query.maxNights
       }
     }
 
-    if (req.query.minMileage && req.query.maxMileage) {
+    if (req.query.minMileage) {
       searchparams.totalMileage = {
-        $gte: req.query.minMileage,
+        $gte: req.query.minMileage
+      }
+    }
+
+    if (req.query.maxMileage) {
+      searchparams.totalMileage = {
         $lte: req.query.maxMileage
       }
     }

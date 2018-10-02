@@ -27,10 +27,15 @@ function hideOtherDomElements() {
 
 //Check to see if logged in
 
+
+
 function checkLoginStatus() {
   if(sessionStorage.getItem("token")) {
     $('.logged-in').prop('hidden', false);
-    $('.logged-in').html('You are logged in as _getuser');
+    const username = sessionStorage.getItem('username');
+    
+
+    $('.logged-in').html(`You are logged in as ${username}`);
     $('.login').prop('hidden', true);
     $('.register').prop('hidden', true);
     $('.register-below').prop('hidden', true);
@@ -71,29 +76,13 @@ function displayTripsHTML(trip) {
 
 function displayTrips(data) {
   const results = data.trips.map((trip) => displayTripsHTML(trip));
-  $('.recent-trips').html(results);
+  $('.recent-trips-results').html(results);
   // trips = data;
 }
 
 function getAndDisplayTrips() {
   getTrips(displayTrips);
 }
-// function displayComments(comment) {
-//   return `<p class="comments" hidden>${comment.content}</p>`
-// }
-// function handleClickForComments(data) {
-//   $('body').on('click', '.show-comments', function(data) {
-//     $('.comments').prop('hidden', false);
-//     $('.show-comments').replaceWith(`<button type="click" class="hide-comments">Hide Comments</button>`);
-//   });
-// }
-// function handleClickToHideComments() {
-//   $('body').on('click', '.hide-comments', function(event) {
-//     event.preventDefault();
-//     $('.comments').prop('hidden', true);
-//     $('.hide-comments').replaceWith(`<button class="show-comments" type='click'>Show Comments</button>`);
-//   })
-// }
 
 function handleClickBrowseRecent() {
   $('.browse-recent').on('click', function(){
@@ -110,12 +99,10 @@ function getTripById(selectedTripId, callback) {
 }
 
 function displayTripDetails(data) {
-    // const comments = selectedTrip.comments.map(comment => displayComments(comment)).join('');
     hideOtherDomElements();
     $('.recent-trips').prop('hidden', true);
     $('.trip-details').prop('hidden', false);
     $('.trip-details').html(`
-          <div class=tripId hidden></div>
           <h3 data-trip-id=${data.id}>${data.name}</h3>
           <p>Quick Description: ${data.shortDescription}</p>
           <p>Contributed by: ${data.userContributed.username}</p>
@@ -146,16 +133,12 @@ function handleClickForTripDetails() {
 function handleSearchTripsButton() {
   $('.search-trips').on('click', function() {
     hideOtherDomElements();
-    // $('.recent-trips').prop('hidden', true);
     $('.search').prop('hidden', false);
-
-    // $('.search-trips').prop('hidden', true);
   })
 }
 
 function displaySearchResults(data) {
   hideOtherDomElements();
-  // $('.search-trips-form').prop('hidden', true);
   $('.search-results').prop('hidden', false )
   let results = '<p>No results. Try again</p>'
   if (data.trips.length>0) {
@@ -206,41 +189,14 @@ function submitSearchParams() {
   })
 }  
 
+
+
+
 //Search form field sliding
 
 function showHideSearchField() {
   $('.search-trips-form h3').on('click', function() {
     $(this.nextElementSibling).slideToggle();
-  })
-}
-
-//Get users
-
-function getUsers(callback) {
-  // setTimeout(function(){ callback(MOCK_USERS)}, 100);
-  $.getJSON(USERS_SEARCH_URL, callback)
-}
-
-function displayUsersHTML(user) {
-  return `
-  <p data-user-id=${user.id}>${user.firstName} ${user.lastName}</p>
-  `
-}
-
-function displayUsers(data) {
-  const results = data.users.map((user) => displayUsersHTML(user));
-  $('.recent-trips').prop('hidden', true);
-  $('.users').prop('hidden', false);
-  $('.users').append(results);
-}
-
-function getAndDisplayUsers() {
-  getUsers(displayUsers);
-}
-
-function handleClickViewUsers() {
-  $('.view-users').on('click', function() {
-    getAndDisplayUsers();
   })
 }
 
@@ -267,8 +223,6 @@ function translateTripId(tripId) {
 }  
 
 function displayUserProfile(data) {
-  // const idOfTripsPosted = data.users[0].tripsPosted;
-  // const tripsNamesPosted = idOfTripsPosted.map(tripId => translateTripId(tripId)).join('');
   $('.users').prop('hidden', true);
   $('.user-profile').prop('hidden', false)
   $('.user-profile').append(`
@@ -288,16 +242,22 @@ function getAndDisplayProfile() {
 
 //Posting a trip
 
+//clear form if click away
+function clearForm() {
+  $('.trip-posting-form div input').val('');
+  $('.trip-posting-form select').val('');
+  $('.trip-posting-form textarea').val('');
+}
+
 function handlesPostATripButton() {
   $('.post-trip-button').on('click', function() {
     if (!sessionStorage.getItem("token")) {
       alert('You must be logged in in order to post a trip');
     } else {
     hideOtherDomElements();  
-    // $('.recent-trips').prop('hidden', true);
+    $('.name-taken').prop('hidden', true);
     $('.post-trip').prop('hidden', false);
-
-    // $('.trip-details').prop('hidden', true);
+    clearForm();
   }})
 }
 
@@ -313,7 +273,6 @@ function postTrip(tripData, callback) {
       "shortDescription": `${tripData.shortDescription}`,
       "longDescription": `${tripData.longDescription}`,
       "difficulty": `${tripData.difficulty}`,
-      // "features": `${tripData.features}`,
       "userContributed": `${tripData.userContributed}`,
       "totalMileage": `${tripData.totalMileage}`,
       "dateAdded": Date.now()
@@ -337,22 +296,6 @@ function postTrip(tripData, callback) {
     });
 }
 
-function checkName(data) {
-  console(data.name)
-  if (data.name) {
-    console(data.name)
-    alert('sorry that name is already taken');
-  }
-}
-
-// function getSearchedTrips(name) {
-//   const query = {
-//     name: name,
-//   }
-//   $.getJSON(TRIPS_SEARCH_URL, query, checkName);
-// }
-
-
 
 function handlesPostingNewTrip() {
   $('.trip-posting-form').on('submit', function(event) {
@@ -364,17 +307,12 @@ function handlesPostingNewTrip() {
     const totalMileage = $(".trip-posting-form input[id='total-mileage']").val();
     const shortDescription = $(".trip-posting-form input[id='short-description']").val();
     const longDescription = $(".trip-posting-form textarea").val();
-    const difficulty = $(".trip-posting-form select[id='difficulty']").val();
-    // const features = [];
-    //   $(".trip-posting-form input:checkbox[id='features']:checked").each(function() {
-    //     features.push($(this).val());  
-    //   });     
+    const difficulty = $(".trip-posting-form select[id='difficulty']").val();    
     const userContributed = sessionStorage.getItem("userId");
     const now = new Date();
     const dateAdded = (`${now.getMonth() + 1}-${now.getDate()}-${now.getFullYear()}`)
     const tripData = {dateAdded, userContributed, totalMileage, name, state, longAndLat, nights, shortDescription, longDescription, difficulty}
     console.log(tripData)
-
     postTrip(tripData, displayPostedTrip);
     $('.post-trip').prop('hidden', true);
     //clearing the form
@@ -384,45 +322,53 @@ function handlesPostingNewTrip() {
   })
 }
 
-// function focustout() {
-//   $(".trip-posting-form input[id='name']").on('focusout', function(){
-//     const inputName = $(".trip-posting-form input[id='name']").val();
-//     checkIfNameIsTaken(name, checkName)
-//     console.log('i heard that')
-//   })
-// }
+function focusOutOfName() {
+  $(".trip-posting-form input[id='name']").on('focusout', function(){
+    const inputName = $(".trip-posting-form input[id='name']").val();
+    checkIfNameIsTaken(inputName, checkName)
+    console.log('i heard that')
+  })
+}
 
-// function checkIfNameIsTaken(inputName, callback) {
-//     console.log(inputName);
-//     const query = {
-//       "name": inputName
-//      }
-//      console.log(query);
-//      $.getJSON(TRIPS_SEARCH_URL, query, callback);
-//    }
+function checkIfNameIsTaken(inputName, callback) {
+    console.log(inputName);
+    const query = {
+      "name": inputName
+     }
+     console.log(query);
+     $.getJSON(TRIPS_SEARCH_URL, query, callback);
+   }
 
-// function checkName(data) {
-//   console.log(data)
-//   if (data.trips.length>0) {
-//     alert('sorry that name is already taken');
-//   }
-// }
-
-
-
-
+function checkName(data) {
+  console.log(data)
+  if (data.trips.length>0) {
+    console.log('nooo');
+    $('.name-taken').html('Sorry, There is already a trip by that name. Please choose a different one')
+    $('.name-taken').prop('hidden', false);
+    $('#submit-trip').attr('disabled', true);
+  } else {
+    $('.name-taken').prop('hidden', true);
+    $('#submit-trip').attr('disabled', false);
+  }
+}
 
 //Editing a trip
 
-function updateTripDetails() {
-  $('.trip-editing-view').prop('hidden', false);
+//clear form if click away
+function clearEditForm() {
+  $('.trip-editing-form div input').val('');
+  $('.trip-editing-form select').val('');
+  $('.trip-editing-form textarea').val('');
+}
 
+function updateTripDetails() {
+  clearEditForm();
+  $('.trip-editing-view').prop('hidden', false);
 }
 
 function handleClickToEdit() {
   $('.trip-details').on('click', '.edit-trip', function() {
     updateTripDetails();
-
   })
 }
 
@@ -444,6 +390,7 @@ function displayUpdatedTripDetails(data) {
   getTripById(data.id, displayTripDetails);
 }
 
+
 function submitTripUpdates() {
   $('.submit-trip-edits').on('click', function(event) {
     event.preventDefault();
@@ -457,7 +404,6 @@ function submitTripUpdates() {
     const _longDescription = $(".trip-editing-form textarea[id='long-description']").val();
     const _difficulty = $(".trip-editing-form select[id='difficulty']").val();
     const _userContributed = sessionStorage.getItem("userId");
-    // const now = new Date();
     const keyValuesToBeUpdated = {
       "id": `${tripId}`
     }
@@ -470,12 +416,34 @@ function submitTripUpdates() {
       }
     });
     putTripEdits(tripId, keyValuesToBeUpdated, displayUpdatedTripDetails);
-    $('.submit-trip-editsdiv input').val('');
-    $('.submit-trip-edits select').val('');
-    $('.submit-trip-edits textarea').val('');
+    $('.trip-editing-form div input').val('');
+    $('.trip-editing-form select').val('');
+    $('.trip-editing-form textarea').val('');
   })
 }
 
+function focusOutOfNameEdit() {
+  $(".trip-editing-form input[id='name']").on('focusout', function(){
+    const inputName = $(".trip-editing-form input[id='name']").val();
+    checkIfNameIsTaken(inputName, checkNameEdit)
+    console.log('i heard that')
+  })
+}
+
+
+function checkNameEdit(data) {
+  console.log(data)
+  if (data.trips.length>0) {
+    console.log('nooo');
+    $('.edit-name-taken').html('Sorry, There is already a trip by that name. Please choose a different one')
+    $('.edit-name-taken').prop('hidden', false);
+    $('#submit-trip-edits').attr('disabled', true);
+  } else {
+    $('.edit-name-taken').prop('hidden', true);
+    $('#submit-trip-edits').attr('disabled', false);
+  }
+
+}
 
 // DELETE a trip
 
@@ -586,9 +554,9 @@ function storeUserInfo(res) {
     $('.login-area').prop('hidden', true);
     $('.log-out').prop('hidden', false);
   }  
-
   sessionStorage.setItem("token", `${res.authToken}`);
   sessionStorage.setItem("userId", `${res.userId}`);
+  sessionStorage.setItem("username", `${res.username}`);
   checkLoginStatus();
   
 }
@@ -629,7 +597,8 @@ function handlesLogOutClick() {
 }
 
 function init () {
-  // $(focustout);
+  $(focusOutOfNameEdit);
+  $(focusOutOfName);
   $(showHideSearchField);
   $(handleClickBrowseRecent)
   $(submitSearchParams);
@@ -642,9 +611,6 @@ function init () {
   // $(handleSubmitSearchData);
   $(getAndDisplayProfile);
   $(getAndDisplayTrips);
-  $(handleClickViewUsers);
-  // $(handleClickForComments);
-  // $(handleClickToHideComments);
   $(handleClickForTripDetails);
   $(handleSearchTripsButton);
   $(handlesPostingNewTrip);
