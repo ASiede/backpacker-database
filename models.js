@@ -52,7 +52,6 @@ const tripSchema = mongoose.Schema({
     type: String, 
     required: true
     },
-  // features: ['string'],
   dateAdded: { type: Date },
   lastUpdated: { type: Date },
   comments: [commentSchema]
@@ -93,17 +92,6 @@ userSchema.statics.hashPassword = function(password) {
 };
 
 
-
-
-
-// const userSchema = mongoose.Schema({
-//   username: 'string',
-//   firstName: 'string',
-//   lastName: 'string',
-//   password: 'string',
-//   tripsPosted:[tripSchema]
-// });
-
 //prehook for username
 tripSchema.pre('find', function(next) {
 	this.populate('userContributed');
@@ -122,24 +110,11 @@ tripSchema.methods.serialize = function() {
 		shortDescription: this.shortDescription,
 		longDescription: this.longDescription,
 		difficulty: this.difficulty,
-		// features: this.features,
     comments: this.comments,
     dateAdded: this.dateAdded,
     dateUpdated: this.dateUpdated
-    
 	};	
 };
-
-// userSchema.methods.serialize = function() {
-// 	return {
-// 		// id: this._id,
-// 		username: this.username,
-// 		firstName: this.firstName,
-// 		lastName: this.lastName,
-// 		// password: this.password,
-// 		// tripsPosted: this.tripsPosted
-// 	};	
-// };
 
 commentSchema.methods.serialize = function() {
   return {
@@ -150,7 +125,6 @@ commentSchema.methods.serialize = function() {
     dateAdded: this.dateAdded
   }
 };
-
 
 const Trip = mongoose.model("Trip", tripSchema);
 const User = mongoose.model("User", userSchema);

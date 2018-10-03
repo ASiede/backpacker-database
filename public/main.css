@@ -12,7 +12,6 @@ body {
 	background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Moraine_Lake_17092005.jpg/1024px-Moraine_Lake_17092005.jpg');
 	background-repeat: no-repeat;
 	background-size: cover;
-
 }
 
 header {
@@ -34,10 +33,11 @@ main {
 	background-size: cover;*/
 	max-height: 1000px;
 	overflow: scroll;
+	min-height: 700px;
 
 }
 /****************************************** 
-				LOG IN / REGISTER	
+			LOG IN / REGISTER	
 ******************************************/
 
 .login-status {
@@ -55,6 +55,16 @@ main {
 .login-status p {
 	margin: 4px;
 }
+
+.login, .register {
+	background-color: white;
+}
+
+.log-out, .login, .register {
+	background-color: green;
+	color: white;
+}
+
 
 /****************************************** 
 				NAV BAR
@@ -90,8 +100,13 @@ nav {
 				TRIP DETAILS	
 ******************************************/
 .recent-trips h2 {
-	margin-left: 20px;
+	margin-left: auto;
+	margin-right: auto;
 	text-align: center;
+	color: black;
+	background-color: white;
+	opacity: 0.85;
+	max-width: 80%;
 }
 .trip, .trip-details {
 	border: solid 2px black;
@@ -253,7 +268,15 @@ main input[type="submit"]:hover, main input[type="submit"]:focus {
 /****************************************** 
 			POSTING / EDITING TRIPS
 ******************************************/
-
+.post-trip h2 {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	color: black;
+	background-color: white;
+	opacity: 0.85;
+	max-width: 80%;
+}
 
 .trip-posting-form, .trip-editing-view {
 	border: 3px solid navy;
@@ -274,12 +297,6 @@ textarea {
 	width: 100%;
 }
 
-.post-trip h2 {
-	margin-left: 15px;
-	margin-right: 15px;
-	text-align: center;
-}
-
 .trip-posting-form input {
 	/*background-color: rgba(10, 122, 166, 0.65);*/
 }
@@ -297,6 +314,15 @@ textarea {
 	padding: 5px;
 }
 
+/****************************************** 
+			Registering
+******************************************/
+.profile {
+	background-color: rgba(10, 122, 166, 1);;
+	margin: 20px;
+	text-align: center;
+    padding: 20px;
+}
 
 
 /*Media Queries*/
@@ -340,13 +366,17 @@ textarea {
 		margin-right: auto;
 	}
 
+	.trip-details {
+		max-width: 500px;
+	}
+
 	.trip-posting-form, .trip-editing-form, .search-trips-form {
 		max-width: 450px;
 		margin-right: auto;
 		margin-left: auto;
 	}
 
-	.recent-trips-results {
+	.recent-trips-results, .search-results {
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
@@ -356,7 +386,7 @@ textarea {
 
 
 /* Larger Desktops and laptops ----------- */
-@media screen and (min-width : 920px) {
+@media screen and (min-width : 995px) {
 	h1 {
 		font-size: 75px;
 	}

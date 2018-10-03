@@ -27,11 +27,10 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 function seedTripData() {
   console.info('seeding trip data');
   return Trip.insertMany(seedTrips);
-  // return User.insertMany(seedUsers);
-  // return Comment.insertMany(seedComments)
 }
 
 function seedUserData() {
+  console.info('seeding user data');
   return User.insertMany(seedUsers);
 }
 
@@ -116,22 +115,15 @@ describe('Trips API resource', function() {
           expect(resTrip.difficulty).to.equal(trip.difficulty);
           expect(resTrip.shortDescription).to.equal(trip.shortDescription);
           expect(resTrip.longDescription).to.equal(trip.longDescription);
-          // expect(resTrip.features).to.be.a('array');
-          //error expecting ['lake'] to be ["lake"]
-          // expect(resTrip.features).to.equal(trip.features);
         });
     });
   });
-
 
   describe('POST endpoint', function() {
 
     it('should add a new trip', function() {
       //authorize user
-      
       const userData = {"username": "ehillory", "password": "everesteverest", "firsName": "Tenzing", "lastName": "Norgay"}
-      
-
       return chai.request(app)
         .post('/users')
         .send(userData)
@@ -168,16 +160,11 @@ describe('Trips API resource', function() {
                       'id', 'name', 'location', 'nights', 'totalMileage', 'shortDescription', 'longDescription', 'features');
                     expect(res.body.id).to.not.be.null;
                     expect(res.body.name).to.equal(newTrip.name);
-                    //below isn't working
-                    // expect(res.body.location).to.equal(newTrip.location);
                     expect(res.body.nights).to.equal(newTrip.nights);
                     expect(res.body.totalMileage).to.equal(newTrip.totalMileage);
                     expect(res.body.shortDescription).to.equal(newTrip.shortDescription);
                     expect(res.body.longDescription).to.equal(newTrip.longDescription);
                     expect(res.body.difficulty).to.equal(newTrip.difficulty);
-                    //something about arrays not equalling each other
-                    // expect(res.body.features).to.contain(newTrip.features);
-
                     return Trip.findById(res.body.id);
                   })
                   .then(function(trip) {
@@ -188,13 +175,12 @@ describe('Trips API resource', function() {
                     expect(trip.longDescription).to.equal(newTrip.longDescription);
                     expect(trip.difficulty).to.equal(newTrip.difficulty);
                     expect(trip.features).to.contain(newTrip.features);
-
                     expect(trip.location.longAndLat).to.equal(newTrip.location.longAndLat);
                     expect(trip.location.state).to.equal(newTrip.location.state);
+              })
             })
-        })
-            })
-        });
+          })
+      });
     });
   });
 

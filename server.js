@@ -33,23 +33,14 @@ app.use(function(req, res, next) {
   next();
 });
 
-
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
 app.use('/users', usersRouter);
 app.use('/auth/', authRouter);
 
-
-
 //include this as middleware for anything that you must be authorized as a user for
 const jwtAuth = passport.authenticate('jwt', { session: false });
-
-app.get('/protected', jwtAuth, (req, res) => {
-  return res.json({
-    data: 'rosebud'
-  });
-});
 
 //Get request to return posts
 app.get("/trips", (req, res) => {
@@ -60,7 +51,6 @@ app.get("/trips", (req, res) => {
     const queryparams = ["name", "location.state", "difficulty"];
     for (let i=0; i<queryparams.length; i++) {
       let param = queryparams[i];
-      console.log(req.query[param])
       if (req.query[param]){
         searchparams[param] = req.query[param]
       }
@@ -93,13 +83,6 @@ app.get("/trips", (req, res) => {
     if (req.query.description) {
       searchparams.longDescription = {"$regex": `${req.query.description}`, "$options": "i"} 
     }
-
-    // const searchedFeatures = req.query.features;
-    // console.log(searchedFeatures);
-    // if (searchedFeatures) {
-    //   searchparams.features = { $all: req.query.features }
-    // }
-    console.log(searchparams);
     Trip.find(searchparams).limit(10).sort({dateAdded: -1})
     .populate('userContributed')
     .then(trips => {
@@ -135,18 +118,12 @@ app.post('/trips', jwtAuth, jsonParser, (req, res) => {
       console.error(message);
       return res.status(400).send(message);
     }
-    // } else if (Trip.find({name: `${req.body.name}`})) {
-    //       console.error('smae name');
-    //       return res.status(400).json({ message: 'same name'});
-    //     }
 
   }
 
   User.findById(req.body.userContributed)
     .then( user => { 
       if (user) {
-
-        
         Trip.create({
         	name: req.body.name,
         	userContributed: user,
@@ -156,7 +133,6 @@ app.post('/trips', jwtAuth, jsonParser, (req, res) => {
         	shortDescription: req.body.shortDescription,
         	longDescription: req.body.longDescription,
         	difficulty: req.body.difficulty,
-        	// features: req.body.features,
           dateAdded: req.body.dateAdded
         })
         .then(trip => res.status(201).json(trip.serialize()))
@@ -164,7 +140,6 @@ app.post('/trips', jwtAuth, jsonParser, (req, res) => {
           console.error(err);
           res.status(500).json({ message: 'Internal server error' });
         })
-
       } else {
           const message = `User not found`;
           console.error(message);
@@ -187,16 +162,13 @@ app.put('/trips/:id', jsonParser, (req, res) => {
     console.error(message);
     return res.status(400).json({ message: message });
   }
-
   const toUpdate = {};
   const updateableFields = ['name', 'location', 'nights', 'totalMileage', 'shortDescription', 'longDescription', 'difficulty'];
-
   updateableFields.forEach(field => {
     if (field in req.body) {
       toUpdate[field] = req.body[field];
     }
   });
-
   Trip.findByIdAndUpdate(req.params.id, { $set: toUpdate })
     .then(trip => res.status(201).json(trip.serialize()))
     .catch(err => res.status(500).json({ message: 'Internal server error' }));
@@ -204,152 +176,9 @@ app.put('/trips/:id', jsonParser, (req, res) => {
 
 //DELETE trip
 app.delete('/trips/:id', (req, res) => {
-  //check to make sure paths match??
   Trip
     .findByIdAndRemove(req.params.id)
     .then(trip => res.status(204).end())
-    .catch(err => res.status(500).json({ message: 'Internal server error' }));
-});
-
-
-//Post a comment
-app.post('/comments', (req, res) => {
-  const requiredFields = ['content', 'tripId', 'userContributed', 'dateAdded'];
-  for (let i = 0; i < requiredFields.length; i++) {
-    const field = requiredFields[i];
-    if (!(field in req.body)) {
-      const message = `Missing \`${field}\` in request body`;
-      console.error(message);
-      return res.status(400).send(message);
-    }
-  }
-  User.findById(req.body.userContributed)
-    .then( user => { 
-      if (user) {
-          // Comment.create({
-          // content: req.body.content,
-          // tripId: req.body.tripId,
-          // userContributed: req.body.userContributed,
-          // })
-        Trip.findOne({
-          _id: req.body.tripId
-        })
-        .then(trip => {
-          
-          trip.comments.push({
-            content: `${req.body.content}`,
-            tripId: `${req.body.tripId}`,
-            userContributed: `${req.body.userContributed}`,
-            dateAdded: `${req.body.dataAdded}`
-          });
-          // res.json(trip);
-          trip.save();
-          res.json(trip);
-          res.status(201);
-        })
-        .catch(err => {
-          console.error(err);
-          res.status(500).json({ message: 'Internal server error' });
-        });
-      } else {
-          const message = `User not found`;
-          console.error(message);
-          return res.status(500).send(message);
-        }    
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ error: 'Internal server error' });
-    });
-});
-
-//Put and update trip
-app.put('/trips/:id', (req, res) => {
-  // ensure that the id in the request path and the one in request body match
-  if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
-    const message = (
-      `Request path id (${req.params.id}) and request body id ` +
-      `(${req.body.id}) must match`);
-    console.error(message);
-    return res.status(400).json({ message: message });
-  }
-
-  const toUpdate = {};
-  const updateableFields = ['name', 'location', 'nights', 'totalMileage', 'shortDescription', 'longDescription', 'difficulty'];
-
-  updateableFields.forEach(field => {
-    if (field in req.body) {
-      toUpdate[field] = req.body[field];
-    }
-  });
-
-  Trip.findByIdAndUpdate(req.params.id, { $set: toUpdate })
-    .then(trip => res.status(204).end())
-    .catch(err => res.status(500).json({ message: 'Internal server error' }));
-});
-
-// Get users
-// app.get("/users", (req, res) => {
-//     User.find()
-//     .then(users => {
-//     	res.json({
-//     		users: users.map(user => user.serialize())
-//     	})
-//     }) 
-//     .catch(err => {
-//       console.error(err);
-//       res.status(500).json({ message: "Internal server error" });
-//     });
-// });
-
-// Post a new user
-
-// app.post('/users', jsonParser, (req, res) => {
-//   console.log(req.body);
-
-//   const requiredFields = ['username','firstName', 'lastName', 'password'];
-  
-//   for (let i = 0; i < requiredFields.length; i++) {
-//     const field = requiredFields[i];
-//     if (!(field in req.body)) {
-//       const message = `Missing \`${field}\` in request body`;
-//       console.error(message);
-//       return res.status(400).send(message);
-//     }
-//   }
-//   User.create({
-//     // check to make sure username isn't taken
-//     username: req.body.username,
-//     firstName: req.body.firstName,
-//     lastName: req.body.lastName,
-//     // hashing password etc
-//     password: req.body.password,
-//   })
-//   .then(user => res.status(201).json(user.serialize()))
-//   .catch(err => {
-//     console.error(err);
-//     res.status(500).json({ message: 'Internal server error' });
-//   });   
-// });
-
-// Get user by ID
-
-// app.get('/users/:id', (req, res) => {
-//     User.findById(req.params.id)
-//       .then(user => res.json(user.serialize()))
-//       //Do I need to check that id and route is the same
-//       .catch(err => {
-//           console.error(err);
-//           res.status(500).json({ message: 'Internal server error' });
-//     });
-// });
-
-// Delete Comment
-app.delete('/comments/:id', (req, res) => {
-  //check to make sure paths match??
-  Comment
-    .findByIdAndRemove(req.params.id)
-    .then(comment => res.status(204).end())
     .catch(err => res.status(500).json({ message: 'Internal server error' }));
 });
 
@@ -395,9 +224,6 @@ function closeServer() {
 }
 
 if (require.main === module) {
-  // app.listen(process.env.PORT || 8080, function() {
-  //   console.info(`App listening on ${this.address().port}`);
-  // });
   runServer(DATABASE_URL).catch(err => console.error(err));
 };
 
