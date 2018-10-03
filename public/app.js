@@ -423,7 +423,7 @@ function displayDeleteSuccess() {
 
 function handlesClickToDeleteTrip() {
   $('.trip-details').on('click', '.delete-trip', function() {
-    const tripId = $('.trip-details h2').data('trip-id');
+    const tripId = $('.trip-details h3').data('trip-id');
     deleteTrip(tripId, displayDeleteSuccess);
   })
 }

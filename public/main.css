@@ -60,11 +60,24 @@ main {
 	background-color: white;
 }
 
-.log-out, .login, .register {
-	background-color: green;
-	color: white;
+.submit-login-info, .submit-user-info {
+	margin-top: 5px;
 }
 
+.log-out, .login, .register, .submit-login-info, .submit-user-info {
+	background-color: green;
+	color: white;
+	font-size: 14px;
+}
+
+.log-out:hover, .log-out:focus,
+.login:hover, .login:focus, 
+.register:hover, .register:focus,
+.submit-login-info:hover, .submit-login-info:focus,
+.submit-user-info:hover,.submit-user-info:focus  {
+	background-color: darkgreen;
+	cursor: pointer;
+}
 
 /****************************************** 
 				NAV BAR
@@ -106,23 +119,19 @@ nav {
 	color: black;
 	background-color: white;
 	opacity: 0.85;
-	max-width: 80%;
+	max-width: 600px;
 }
 .trip, .trip-details {
 	border: solid 2px black;
-	margin-left: 20px;
-	margin-right: 20px;
+	margin-left: auto;
+	margin-right: auto;
 	margin-top: 15px;
 	border-radius: 3px;
 	padding: 10px;
 	background-color: white;
 	width: 80%;
 	opacity: 0.85;
-
-
-	/*-webkit-box-shadow: 3px 3px 5px 6px #ccc;  
-  	-moz-box-shadow: 3px 3px 5px 6px #ccc;  
-  	box-shadow: 3px 3px 5px 6px #ccc;  */
+	max-width: 600px;
 }
 
 .trip:hover, .trip:focus {
@@ -279,10 +288,10 @@ main input[type="submit"]:hover, main input[type="submit"]:focus {
 }
 
 .trip-posting-form, .trip-editing-view {
-	border: 3px solid navy;
+	/*border: 3px solid navy;*/
 	margin: 20px;
 	padding: 15px;
-	background-color: white;
+	/*background-color: white;*/
 	border-radius: 5px;
 }
 
@@ -290,15 +299,15 @@ main input[type="submit"]:hover, main input[type="submit"]:focus {
 	margin: 5px;
 	border: 2px solid rgba(10, 122, 166, 0.65);
 	padding: 15px;
+}
 
+.trip-editing-form, .trip-posting-form {
+	background-color: white;
+	border-radius: 3px;
 }
 
 textarea {
 	width: 100%;
-}
-
-.trip-posting-form input {
-	/*background-color: rgba(10, 122, 166, 0.65);*/
 }
 
 

@@ -83,7 +83,7 @@ app.get("/trips", (req, res) => {
     if (req.query.description) {
       searchparams.longDescription = {"$regex": `${req.query.description}`, "$options": "i"} 
     }
-    Trip.find(searchparams).limit(10).sort({dateAdded: -1})
+    Trip.find(searchparams).limit(9).sort({dateAdded: -1})
     .populate('userContributed')
     .then(trips => {
     	res.json({
