@@ -8,3 +8,6 @@ deploy:
   app: thawing-beach-93547
   on:
     repo: ASiede/node-capstone
+env:
+  global:
+    secure: dWKbMvJBHVFqhX7qMoxx2naHYjShFKysG8TL2a3uxStS5ccGZCO3UAB7cpeoFlI+eUokgkcDP+Oip4AmZp3y0mYclUg+Kt+4LL9BFvMJTKLRVP0Nyn+dj0BBES+kMb8JaB7TnZHeQhQJIKT4VqpGzM1PkuBE0If9NXNK0ZUo0+zgyJ6ii0Kng/aj2h5OdDPVdUp/RI4xx+DTnyGYwlhwkhHzI8EFXthKqYM1ceWe8/Bd2jQCJkSH3q9zX8FdJZiRdOpnFpsP3Cs3zTpQ+zcYd2sc/NEZSduQgW7NHNcjvI6WjruILyF+bmglGTXeL6IwlmOhbxAVzTN0lkpx7OIgt8mujIFqXVwBAoiaKvcfm0d2MOyMFnqPfPxoYU+rcKVeE62pfZfd/1pl9ZUVBcoA/iyJaJYWPplcLPxPO+gr7R5Kh/l6nn4AIJR9HLf/ac3E1qS2ajOiv61Gs40iosAXbXSIqk3AT8761LXOXnxzau6/k1dePC+ezTFX0Pv6aQdPjmsMFgbCJ1NdzSOQn9j9YnJDoCmgb+fReo+41/z9dRq5adFWGVavov3xGEaqrc3rUoUJ04ea6fEuGYjiVeQnPLUaUAD6GzX+IjmWRJbi/GOUN0y+6zjgbj4jUDmqpM5ZLLe2h8iexsV0Fn5JRyBiKitKcu2u4FFhS/BgnulVczI=
