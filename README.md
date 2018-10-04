@@ -3,6 +3,9 @@
 ## Overview
 An app where users can contribute, view, and search for backcountry backpacking trips throughout the US.
 
+## Live Demo
+[Link to Demo](https://thawing-beach-93547.herokuapp.com)
+
 ## Screenshots
 Landing View
 
@@ -24,9 +27,6 @@ Mobile Landing View
 
 ![Mobile Landing View](screenshots/mobile-view.png)
 
-
-## Live Demo
-[Link to Demo](https://thawing-beach-93547.herokuapp.com)
 
 ## API Documentation
 API Layer of Backpacker Database allows for:
