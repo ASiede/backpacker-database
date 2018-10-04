@@ -4,10 +4,21 @@
 An app where users can contribute, view, and search for backcountry backpacking trips throughout the US.
 
 ## Screenshots
+Landing View
+![Landing View](screenshots/landing-view.png)
 
-Home - Desktop
+Trip Details
+![Trip Details](screenshots/details-view.png)
 
-![Home desktop]()
+Searching Trips
+![Searching Trips](screenshots/search-view.png)
+
+Posting Trips
+![Posting Trips](screenshots/post-view.png)
+
+Mobile Landing View
+![Mobile Landing View](screenshots/mobile-view.png)
+
 
 ## Live Demo
 [Link to Demo](https://thawing-beach-93547.herokuapp.com)
