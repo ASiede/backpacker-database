@@ -48,7 +48,7 @@ app.get("/trips", (req, res) => {
     //SEARCH PARAMETERS
     let searchparams = {};
     
-    const queryparams = ["name", "location.state", "difficulty"];
+    const queryparams = ["location.state", "difficulty"];
     for (let i=0; i<queryparams.length; i++) {
       let param = queryparams[i];
       if (req.query[param]){
@@ -83,6 +83,13 @@ app.get("/trips", (req, res) => {
     if (req.query.description) {
       searchparams.longDescription = {"$regex": `${req.query.description}`, "$options": "i"} 
     }
+
+    if (req.query.name) {
+      searchparams.name = {"$regex": `${req.query.name}`, "$options": "i"} 
+    }
+
+
+
     Trip.find(searchparams).limit(9).sort({dateAdded: -1})
     .populate('userContributed')
     .then(trips => {
