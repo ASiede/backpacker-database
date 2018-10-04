@@ -61,43 +61,6 @@ describe('Trips API resource', function() {
     return closeServer();
   });
 
-//POST endpoint for users
-  // describe('POST endpoint', function() {
-
-  //   it('should add a new user', function() {
-  //     const userData = {"username": "JDoe", "password": "passwordpassword", "firsName": "John", "lastName": "Doe"}
-  //     return chai.request(app)
-  //       .post('/users')
-  //       .send(userData)
-  //       .then(function(res) {         
-  //         expect(res).to.have.status(201);
-        //   expect(res).to.be.json;
-        //   expect(res.body).to.be.a('object');
-        //   expect(res.body).to.include.keys(
-        //     'id', 'name', 'location', 'nights', 'totalMileage', 'shortDescription', 'longDescription', 'features');
-        //   expect(res.body.id).to.not.be.null;
-        //   expect(res.body.name).to.equal(newTrip.name);
-        //   expect(res.body.nights).to.equal(newTrip.nights);
-        //   expect(res.body.totalMileage).to.equal(newTrip.totalMileage);
-        //   expect(res.body.shortDescription).to.equal(newTrip.shortDescription);
-        //   expect(res.body.longDescription).to.equal(newTrip.longDescription);
-        //   expect(res.body.difficulty).to.equal(newTrip.difficulty);
-        //   return Trip.findById(res.body.id);
-        // })
-        // .then(function(trip) {
-        //   expect(trip.name).to.equal(newTrip.name);
-        //   expect(trip.nights).to.equal(newTrip.nights);
-        //   expect(trip.totalMileage).to.equal(newTrip.totalMileage);
-        //   expect(trip.shortDescription).to.equal(newTrip.shortDescription);
-        //   expect(trip.longDescription).to.equal(newTrip.longDescription);
-        //   expect(trip.difficulty).to.equal(newTrip.difficulty);
-        //   expect(trip.features).to.contain(newTrip.features);
-        //   expect(trip.location.longAndLat).to.equal(newTrip.location.longAndLat);
-        //   expect(trip.location.state).to.equal(newTrip.location.state);
-      // });
-  //   });
-  // });
-
 // GET endpoint for trips
   describe('GET endpoint', function() {
 
@@ -259,15 +222,47 @@ describe('Trips API resource', function() {
         });
     });
   });
+
+//POST endpoint for users
+  describe('POST endpoint', function() {
+
+    it('should add a new user', function() {
+      const userData = {"username": "JDoe", "password": "passwordpassword", "firsName": "John", "lastName": "Doe"}
+      return chai.request(app)
+        .post('/users')
+        .send(userData)
+        .then(function(res) {         
+          expect(res).to.have.status(201);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body.id).to.not.be.null;
+          expect(res.body.username).to.equal(userData.username);
+      });
+    });
+  });
+
+//POST endpoint for authorization of users login
+  describe('POST endpoint', function() {
+
+    it('should log in an existing user', function() {
+      //register new user first
+      const userData = {"username": "ehillary", "password": "everesteverest", "firsName": "Edmund", "lastName": "Hillary"}
+      return chai.request(app)
+        .post('/users')
+        .send(userData)
+        .then(function(res) {           
+            return chai.request(app)
+              const loginCreds = {"username": "ehillary", "password": "everesteverest"}
+              .post('/auth/login')
+              .send(userCreds)
+              .then(function(res) {
+                expect(res).to.have.status(201);
+              })
+
+        });
+    });
+  });
 });
-
-
-
-
-
-
-
-
 
 // Confirm static page is served
 describe('initial page', function() {
