@@ -6,16 +6,14 @@
 
 body {
 	background-color: rgba(10, 122, 166, 1);
-	/*background-color: rgba(10, 122, 166, 0.1);;*/
 	margin:0;
-	/*background-image: url('https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&cs=tinysrgb&h=650&w=940');*/
 	background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Moraine_Lake_17092005.jpg/1024px-Moraine_Lake_17092005.jpg');
 	background-repeat: no-repeat;
 	background-size: cover;
+	min-height: 100vh;
 }
 
 header {
-	/*background-color: rgba(10, 122, 166, 0.5);*/
 	background-color: white;
 	text-align: center;
 	display: flex;
@@ -25,16 +23,6 @@ header {
 }
 h1 {
 	margin: auto;
-}
-
-main {
-	/*background-image: url('https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&cs=tinysrgb&h=650&w=940');
-	background-repeat: no-repeat;
-	background-size: cover;*/
-	max-height: 1000px;
-	overflow: scroll;
-	min-height: 700px;
-
 }
 /****************************************** 
 			LOG IN / REGISTER	
@@ -49,15 +37,10 @@ main {
 	margin-right: 10px;
 	padding: 10px;
 	background-color: white;
-	
 }
 
 .login-status p {
 	margin: 4px;
-}
-
-.login, .register {
-	background-color: white;
 }
 
 .submit-login-info, .submit-user-info {
@@ -78,20 +61,15 @@ main {
 	background-color: darkgreen;
 	cursor: pointer;
 }
-
 /****************************************** 
 				NAV BAR
 ******************************************/
 nav {
-	/*margin-top: 10px;*/
 	border-top: solid 3px white;
-	/*border-right: solid 1px navy;*/
-	/*border-left: solid 1px navy;*/
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
 	flex-direction: column;
-	/*background-color: rgba(10, 122, 166, 0.2);*/
 	background-color: rgba(32, 73, 89, 0.75);
 	color: white;
 }
@@ -158,23 +136,16 @@ nav {
 	background-color: darkgrey;
 	cursor: pointer;
 }
-
 /****************************************** 
 				FORM STYLES 
 ******************************************/
-/*form div {
-	padding: 10px;
-	background-color: rgba(10, 122, 166, 0.65);
-
-}*/
-
 main form {
 	text-align: center;
+	opacity: .90;
 }
 
 main form input[type="text"], form input[type="number"] {
 	font-size: 20px;
-	
 	max-width: 100%;
 	border-radius: 8px;
 }
@@ -210,8 +181,6 @@ main input[type="submit"]:hover, main input[type="submit"]:focus {
 	border: black solid 3px;
 	cursor: pointer;
 }
-
-
 /****************************************** 
 				SEARCHING TRIPS 
 ******************************************/
@@ -235,7 +204,6 @@ main input[type="submit"]:hover, main input[type="submit"]:focus {
 .search-trips-form div {
 	padding: 10px;
 	background-color: rgba(10, 122, 166, 0.65);
-
 }
 
 .search-trips-form h3 {
@@ -260,12 +228,6 @@ main input[type="submit"]:hover, main input[type="submit"]:focus {
 	background-color: rgba(10, 122, 166, 0.25);
 }
 
-.search-trips-form input, .search-trips-form select {
-	/*max-width: 100px;*/
-	
-}
-
-
 .submit-search-data {
 	margin-left: auto;
 	margin-right: auto;
@@ -273,7 +235,15 @@ main input[type="submit"]:hover, main input[type="submit"]:focus {
 	margin-bottom: 15px;
 }
 
-
+.no-results {
+	background-color: white;
+	opacity: 0.85;
+	margin-right: auto;
+	margin-left: auto;
+	font-size: 20px;
+	padding: 30px;
+	text-align: center;
+}
 /****************************************** 
 			POSTING / EDITING TRIPS
 ******************************************/
@@ -284,14 +254,12 @@ main input[type="submit"]:hover, main input[type="submit"]:focus {
 	color: black;
 	background-color: white;
 	opacity: 0.85;
-	max-width: 80%;
+	max-width: 410px;
 }
 
 .trip-posting-form, .trip-editing-view {
-	/*border: 3px solid navy;*/
 	margin: 20px;
 	padding: 15px;
-	/*background-color: white;*/
 	border-radius: 5px;
 }
 
@@ -310,12 +278,9 @@ textarea {
 	width: 100%;
 }
 
-
-
 #submit-trip, .submit-trip-edits {
 	font-size: 30px;
 	margin: 15px;
-	
 }
 
 .name-taken {
@@ -323,6 +288,9 @@ textarea {
 	padding: 5px;
 }
 
+.deleted {
+	text-align: center;
+}
 /****************************************** 
 			Registering
 ******************************************/
@@ -334,22 +302,9 @@ textarea {
 }
 
 
-/*Media Queries*/
+/*****************************	Media Queries	********************************/
 
-
-/* Smartphones (portrait) ----------- */
-
-/*@media only screen 
-  and (min-device-width: 375px) 
-  and (max-device-width: 667px) 
-  and (-webkit-min-device-pixel-ratio: 2)
-  and (orientation: portrait) { 
-  	header {
-  		background-color: orange;
-  	}
-}*/
-
-/* Desktops and laptops ----------- */
+/* Desktops and laptops */
 @media screen and (min-width : 451px) {
 	h1 {
 		font-size: 50px;
@@ -367,7 +322,6 @@ textarea {
 	.nav-item {
 		border-left: 3px solid white;
 	}
-
 
 	.trip {
 		max-width: 400px;
@@ -393,8 +347,7 @@ textarea {
 
 }
 
-
-/* Larger Desktops and laptops ----------- */
+/* Wider Desktops and laptops */
 @media screen and (min-width : 995px) {
 	h1 {
 		font-size: 75px;

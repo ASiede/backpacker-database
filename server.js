@@ -1,13 +1,11 @@
 "use strict";
 
-//?
-require('dotenv').config();
-
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const passport = require('passport');
 const cors = require('cors');
+require('dotenv').config();
 
 const bodyParser = require('body-parser');
 
@@ -17,7 +15,7 @@ const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 mongoose.Promise = global.Promise;
 
 const { PORT, DATABASE_URL } = require("./config");
-const { Trip, User, Comment } = require('./models');
+const { Trip, User } = require('./models');
 
 const jsonParser = bodyParser.json();
 const app = express();
@@ -39,58 +37,52 @@ passport.use(jwtStrategy);
 app.use('/users', usersRouter);
 app.use('/auth/', authRouter);
 
-//include this as middleware for anything that you must be authorized as a user for
+//include this as middleware for anything that for which you must be an authorized user
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
-//Get request to return posts
+//GET request that returns trip(s) and filters for potential search parameters
 app.get("/trips", (req, res) => {
-    
-    //SEARCH PARAMETERS
-    let searchparams = {};
-    
-    const queryparams = ["location.state", "difficulty"];
-    for (let i=0; i<queryparams.length; i++) {
-      let param = queryparams[i];
-      if (req.query[param]){
-        searchparams[param] = req.query[param]
-      }
+  
+  //Search parameters 
+  let searchparams = {};
+  
+  const queryparams = ["location.state", "difficulty"];
+  for (let i=0; i<queryparams.length; i++) {
+    let param = queryparams[i];
+    if (req.query[param]){
+      searchparams[param] = req.query[param]
     };
+  };
+  if (req.query.minNights) {
+    searchparams.nights = {
+      $gte: req.query.minNights
+    };
+  };
+  if (req.query.maxNights) {
+    searchparams.nights = {
+      $lte: req.query.maxNights
+    };
+  };
+  if (req.query.minMileage) {
+    searchparams.totalMileage = {
+      $gte: req.query.minMileage
+    };
+  };
+  if (req.query.maxMileage) {
+    searchparams.totalMileage = {
+      $lte: req.query.maxMileage
+    };
+  };
+  if (req.query.description) {
+    searchparams.longDescription = {"$regex": `${req.query.description}`, "$options": "i"}; 
+  };
+  if (req.query.name) {
+    searchparams.name = {"$regex": `${req.query.name}`, "$options": "i"}; 
+  };
 
-    if (req.query.minNights) {
-      searchparams.nights = {
-        $gte: req.query.minNights
-      }
-    }
-
-    if (req.query.maxNights) {
-      searchparams.nights = {
-        $lte: req.query.maxNights
-      }
-    }
-
-    if (req.query.minMileage) {
-      searchparams.totalMileage = {
-        $gte: req.query.minMileage
-      }
-    }
-
-    if (req.query.maxMileage) {
-      searchparams.totalMileage = {
-        $lte: req.query.maxMileage
-      }
-    }
-
-    if (req.query.description) {
-      searchparams.longDescription = {"$regex": `${req.query.description}`, "$options": "i"} 
-    }
-
-    if (req.query.name) {
-      searchparams.name = {"$regex": `${req.query.name}`, "$options": "i"} 
-    }
-
-
-
-    Trip.find(searchparams).limit(9).sort({dateAdded: -1})
+  Trip
+    //return max 9 results with most recent added on top
+    .find(searchparams).limit(9).sort({dateAdded: -1})
     .populate('userContributed')
     .then(trips => {
     	res.json({
@@ -100,23 +92,24 @@ app.get("/trips", (req, res) => {
     .catch(err => {
       console.error(err);
       res.status(500).json({ message: "Internal server error" });
-    });
+  });
 });
 
-//Get trip by id
+//GET request to get trip by id
 app.get('/trips/:id', (req, res) => {
-    Trip.findById(req.params.id)
+    Trip
+      .findById(req.params.id)
       .populate('userContributed')
     	.then(trip => res.json(trip.serialize()))
-    	//Do I need to check that id and route is the same
     	.catch(err => {
       		console.error(err);
       		res.status(500).json({ message: 'Internal server error' });
     });
 });
 
-// Post trip
+// POST request to add a new Trip contributed by user
 app.post('/trips', jwtAuth, jsonParser, (req, res) => {
+  // Check for required fields
   const requiredFields = ['name', 'userContributed', 'location', 'nights', 'totalMileage', 'longDescription'];
   for (let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
@@ -125,23 +118,24 @@ app.post('/trips', jwtAuth, jsonParser, (req, res) => {
       console.error(message);
       return res.status(400).send(message);
     }
-
   }
-
-  User.findById(req.body.userContributed)
+  User
+    // GET user information to attach to trip document
+    .findById(req.body.userContributed)
     .then( user => { 
       if (user) {
-        Trip.create({
-        	name: req.body.name,
-        	userContributed: user,
-        	location: req.body.location,
-        	nights: req.body.nights,
-        	totalMileage: req.body.totalMileage,
-        	shortDescription: req.body.shortDescription,
-        	longDescription: req.body.longDescription,
-        	difficulty: req.body.difficulty,
-          dateAdded: req.body.dateAdded
-        })
+        Trip
+          .create({
+          	name: req.body.name,
+          	userContributed: user,
+          	location: req.body.location,
+          	nights: req.body.nights,
+          	totalMileage: req.body.totalMileage,
+          	shortDescription: req.body.shortDescription,
+          	longDescription: req.body.longDescription,
+          	difficulty: req.body.difficulty,
+            dateAdded: req.body.dateAdded
+          })
         .then(trip => res.status(201).json(trip.serialize()))
         .catch(err => {
           console.error(err);
@@ -159,7 +153,7 @@ app.post('/trips', jwtAuth, jsonParser, (req, res) => {
     })
 });
 
-//Put to update trip
+//PUT request to update trip
 app.put('/trips/:id', jsonParser, (req, res) => {
   // ensure that the id in the request path and the one in request body match
   if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
@@ -181,7 +175,7 @@ app.put('/trips/:id', jsonParser, (req, res) => {
     .catch(err => res.status(500).json({ message: 'Internal server error' }));
 });
 
-//DELETE trip
+//DELETE request to delete trip by id
 app.delete('/trips/:id', (req, res) => {
   Trip
     .findByIdAndRemove(req.params.id)
@@ -214,8 +208,6 @@ function runServer(databaseUrl, port = PORT) {
   });
 }
 
-// this function closes the server, and returns a promise. we'll
-// use it in our integration tests later.
 function closeServer() {
   return mongoose.disconnect().then(() => {
     return new Promise((resolve, reject) => {

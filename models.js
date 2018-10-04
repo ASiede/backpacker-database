@@ -5,17 +5,6 @@ const mongoose = require("mongoose");
 
 mongoose.Promise = global.Promise;
 
-const commentSchema = mongoose.Schema({
-  userContributed: {
-    type: mongoose.Schema.Types.ObjectId, ref: 'User'
-  },
-  tripId: {
-    type: mongoose.Schema.Types.ObjectId, ref: 'Trip'
-  },
-  content: 'string',
-  dateAdded: 'string'
-});
-
 const tripSchema = mongoose.Schema({
   userContributed: {
     type: mongoose.Schema.Types.ObjectId, ref: 'User'
@@ -53,8 +42,7 @@ const tripSchema = mongoose.Schema({
     required: true
     },
   dateAdded: { type: Date },
-  lastUpdated: { type: Date },
-  comments: [commentSchema]
+  lastUpdated: { type: Date }
 });
 
 const userSchema = mongoose.Schema({
@@ -92,12 +80,11 @@ userSchema.statics.hashPassword = function(password) {
 };
 
 
-//prehook for username
+// Prehook for username population
 tripSchema.pre('find', function(next) {
 	this.populate('userContributed');
 	next();
 });
-
 
 tripSchema.methods.serialize = function() {
 	return {
@@ -110,24 +97,12 @@ tripSchema.methods.serialize = function() {
 		shortDescription: this.shortDescription,
 		longDescription: this.longDescription,
 		difficulty: this.difficulty,
-    comments: this.comments,
     dateAdded: this.dateAdded,
     dateUpdated: this.dateUpdated
 	};	
 };
 
-commentSchema.methods.serialize = function() {
-  return {
-    id: this._id,
-    tripId: this.tripId,
-    userContributed: this.userContributed.username,
-    content: this.content,
-    dateAdded: this.dateAdded
-  }
-};
-
 const Trip = mongoose.model("Trip", tripSchema);
 const User = mongoose.model("User", userSchema);
-const Comment = mongoose.model("Comment", commentSchema);
 
-module.exports = { Trip, User, Comment};
+module.exports = { Trip, User };

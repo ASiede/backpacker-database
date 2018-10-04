@@ -7,13 +7,12 @@ const mongoose = require('mongoose');
 
 const expect = chai.expect;
 
-const {Trip, User, Comment} = require('../models');
+const {Trip, User} = require('../models');
 const {app, runServer, closeServer} = require('../server');
 const {TEST_DATABASE_URL} = require('../config');
 
 const seedTrips = require('../db/trips');
 const seedUsers = require('../db/users');
-const seedComments = require('../db/comments');
 
 chai.use(chaiHttp);
 
@@ -28,7 +27,7 @@ function seedTripData() {
   console.info('seeding trip data');
   return Trip.insertMany(seedTrips);
 }
-
+//Seeding user data
 function seedUserData() {
   console.info('seeding user data');
   return User.insertMany(seedUsers);
@@ -44,7 +43,6 @@ describe('Trips API resource', function() {
 
   before(function() {
     return runServer(TEST_DATABASE_URL);
-
   });
 
   beforeEach(function() {
@@ -55,7 +53,6 @@ describe('Trips API resource', function() {
     return seedUserData();
   });
 
-
   afterEach(function() {
     return tearDownDb();
   });
@@ -64,9 +61,44 @@ describe('Trips API resource', function() {
     return closeServer();
   });
 
+//POST endpoint for users
+  // describe('POST endpoint', function() {
 
+  //   it('should add a new user', function() {
+  //     const userData = {"username": "JDoe", "password": "passwordpassword", "firsName": "John", "lastName": "Doe"}
+  //     return chai.request(app)
+  //       .post('/users')
+  //       .send(userData)
+  //       .then(function(res) {         
+  //         expect(res).to.have.status(201);
+        //   expect(res).to.be.json;
+        //   expect(res.body).to.be.a('object');
+        //   expect(res.body).to.include.keys(
+        //     'id', 'name', 'location', 'nights', 'totalMileage', 'shortDescription', 'longDescription', 'features');
+        //   expect(res.body.id).to.not.be.null;
+        //   expect(res.body.name).to.equal(newTrip.name);
+        //   expect(res.body.nights).to.equal(newTrip.nights);
+        //   expect(res.body.totalMileage).to.equal(newTrip.totalMileage);
+        //   expect(res.body.shortDescription).to.equal(newTrip.shortDescription);
+        //   expect(res.body.longDescription).to.equal(newTrip.longDescription);
+        //   expect(res.body.difficulty).to.equal(newTrip.difficulty);
+        //   return Trip.findById(res.body.id);
+        // })
+        // .then(function(trip) {
+        //   expect(trip.name).to.equal(newTrip.name);
+        //   expect(trip.nights).to.equal(newTrip.nights);
+        //   expect(trip.totalMileage).to.equal(newTrip.totalMileage);
+        //   expect(trip.shortDescription).to.equal(newTrip.shortDescription);
+        //   expect(trip.longDescription).to.equal(newTrip.longDescription);
+        //   expect(trip.difficulty).to.equal(newTrip.difficulty);
+        //   expect(trip.features).to.contain(newTrip.features);
+        //   expect(trip.location.longAndLat).to.equal(newTrip.location.longAndLat);
+        //   expect(trip.location.state).to.equal(newTrip.location.state);
+      // });
+  //   });
+  // });
 
-// Get endpoint
+// GET endpoint for trips
   describe('GET endpoint', function() {
 
     it('should return all existing trips', function() {
@@ -95,7 +127,6 @@ describe('Trips API resource', function() {
           expect(res.body.trips).to.have.lengthOf.at.least(1);
           res.body.trips.forEach(function(trip) {
             expect(trip).to.be.a('object');
-            // need to put userContributed back in when figre out
             expect(trip).to.include.keys(
               'name', 'nights', 'id', 'location', 'totalMileage', 'shortDescription', 'longDescription', 'userContributed', 'difficulty');
           });
@@ -105,11 +136,9 @@ describe('Trips API resource', function() {
         .then(function(trip) {
           expect(resTrip.id).to.equal(trip.id);
           expect(resTrip.name).to.equal(trip.name);
-          //UserContributing not working because reference isn't right
-          // expect(resTrip.userContributed).to.equal(trip.userContributed);
           expect(resTrip.location).to.be.a('object');
-          // expect(resTrip.location).to.contain(trip.location.longAndLat);
-          // expect(resTrip.location).to.contain(trip.location.state);
+          expect(resTrip.location.longAndLat).to.equal(trip.location.longAndLat);
+          expect(resTrip.location.state).to.contain(trip.location.state);
           expect(resTrip.nights).to.equal(trip.nights);
           expect(resTrip.totalMileage).to.equal(trip.totalMileage);
           expect(resTrip.difficulty).to.equal(trip.difficulty);
@@ -119,10 +148,11 @@ describe('Trips API resource', function() {
     });
   });
 
+//POST endpoint for trips
   describe('POST endpoint', function() {
 
     it('should add a new trip', function() {
-      //authorize user
+      //authorize user first
       const userData = {"username": "ehillory", "password": "everesteverest", "firsName": "Tenzing", "lastName": "Norgay"}
       return chai.request(app)
         .post('/users')
@@ -184,7 +214,7 @@ describe('Trips API resource', function() {
     });
   });
 
-//PUT endpoint
+//PUT endpoint for trips
   describe('PUT endpoint', function() {
     it('should update fields you send over', function() {
       const updateData = {
@@ -210,7 +240,7 @@ describe('Trips API resource', function() {
     });
   });   
 
-//DELETE endpoint
+//DELETE endpoint for trips
   describe('DELETE endpoint', function() {
     it('delete a trip by id', function() {
       let trip;
@@ -231,6 +261,15 @@ describe('Trips API resource', function() {
   });
 });
 
+
+
+
+
+
+
+
+
+// Confirm static page is served
 describe('initial page', function() {
   it('should exist', function() {
     return chai.request(app)
