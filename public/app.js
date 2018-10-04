@@ -107,7 +107,7 @@ function displayTripDetails(data) {
 }
 
 function handleClickForTripDetails() {
-  $('body').on('click', '.trip', function() {
+  $('body').on('click touchstart', '.trip', function() {
     let selectedTripId = $(this).data('trip-id');
     $('.search-results').prop('hidden', true);
     getTripById(selectedTripId, displayTripDetails);
@@ -456,6 +456,7 @@ function displayUserProfile(data) {
 }
 
 function displayNewUser(res) {
+  hideOtherDomElements();
   $('.recent-trips').prop('hidden', true);
   $('.login-area').prop('hidden', false);
   $('.register-as-user').prop('hidden', true);
@@ -476,7 +477,7 @@ function handleSubmitUserInfo() {
   })
 }
 
-// Add login functionality
+// Login a user
 function verifyUser(loginData, callback) {
   const _loginData = {
       username:`${loginData.username}`,
@@ -535,6 +536,9 @@ function handlesLogOutClick() {
     $('.register').prop('hidden', false);
     $('.register-below').prop('hidden', false);
     $('.log-out').prop('hidden', true);
+    hideOtherDomElements();
+    $('.recent-trips').prop('hidden', false);
+    getAndDisplayTrips();
   })
 }
 
