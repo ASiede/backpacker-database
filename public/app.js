@@ -1,14 +1,14 @@
 "use strict"
 
 //FOR DEPLOYMENT ON HEROKU
-// const TRIPS_SEARCH_URL = '/trips';
-// const USERS_SEARCH_URL = '/users';
-// const USER_LOGIN= '/auth/login';
+const TRIPS_SEARCH_URL = '/trips';
+const USERS_SEARCH_URL = '/users';
+const USER_LOGIN= '/auth/login';
 
 //FOR LOCAL DEV ON LOCAL SERVER
-const TRIPS_SEARCH_URL = 'http://localhost:8080/trips';
-const USERS_SEARCH_URL = 'http://localhost:8080/users';
-const USER_LOGIN= 'http://localhost:8080/auth/login'; 
+// const TRIPS_SEARCH_URL = 'http://localhost:8080/trips';
+// const USERS_SEARCH_URL = 'http://localhost:8080/users';
+// const USER_LOGIN= 'http://localhost:8080/auth/login'; 
 
 
 // Make sure DOM elements are not visable
