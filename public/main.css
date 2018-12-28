@@ -6,7 +6,7 @@
 
 body {
 	background-color: rgba(10, 122, 166, 1);
-	margin:0;
+	margin:0px;
 	background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Moraine_Lake_17092005.jpg/1024px-Moraine_Lake_17092005.jpg');
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -21,6 +21,11 @@ header {
 	border-bottom: 3px solid rgba(10, 122, 166, 1);
 	opacity: 0.75;
 }
+
+header h1 {
+	cursor: pointer;
+}
+
 h1 {
 	margin: auto;
 }
@@ -87,6 +92,36 @@ nav {
 	background-color: white;
 	color: black;
 }
+
+/****************************************** 
+				LANDING	
+******************************************/
+
+.landing {
+	background-color: rgba(10, 122, 166, .8);
+	text-align: center;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-bottom: 50px;
+}
+
+.landing h1 {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	font-size: 2em;
+}
+
+.landing h2 {
+	padding: 20px 0px;
+	border-bottom: 3px solid black;
+	border-top: 3px solid black;
+}
+
+.screenshot {
+	max-width: 70%;
+	height: auto;
+}
+
 /****************************************** 
 				TRIP DETAILS	
 ******************************************/
@@ -110,11 +145,11 @@ nav {
 	width: 80%;
 	opacity: 0.85;
 	max-width: 600px;
+
 }
 
 .trip:hover, .trip:focus {
 	cursor: pointer;
-	border: black 3px solid;
 }
 
 .long-description {
@@ -136,6 +171,11 @@ nav {
 	background-color: darkgrey;
 	cursor: pointer;
 }
+
+.recent-trips-results, .trip-details, .post-trip {
+	margin-bottom: 50px;
+}
+
 /****************************************** 
 				FORM STYLES 
 ******************************************/
@@ -165,7 +205,7 @@ main form textarea {
 
 main input[type="number"] {
 	font-size: 20px;
-	max-width: 40px;
+	max-width: 50px;
 }
 
 main input[type="submit"] {
@@ -181,6 +221,11 @@ main input[type="submit"]:hover, main input[type="submit"]:focus {
 	border: black solid 3px;
 	cursor: pointer;
 }
+
+.longlat-hint {
+	font-size: 1em;
+}
+
 /****************************************** 
 				SEARCHING TRIPS 
 ******************************************/
@@ -323,6 +368,18 @@ textarea {
 		border-left: 3px solid white;
 	}
 
+	.landing h1 {
+		font-size: 2.5em;
+	}
+
+	.landing h2 {
+		font-size: 1.75em;
+	}
+
+	.landing p {
+		font-size: 1.5em;
+	}
+
 	.trip {
 		max-width: 400px;
 		margin-left: auto;
@@ -351,6 +408,14 @@ textarea {
 @media screen and (min-width : 995px) {
 	h1 {
 		font-size: 75px;
+	}
+
+	.landing p, .landing h1, .landing h2 {
+		padding: 40px;
+	}
+
+	p.demo {
+		padding: 0px;
 	}
 
 }

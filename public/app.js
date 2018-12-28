@@ -16,6 +16,7 @@ function hideOtherDomElements() {
   $('.search').prop('hidden', true);
   $('.trip').prop('hidden', true);
   $('.no-results').prop('hidden', true);
+  $('.landing').prop('hidden', true);
 }
 
 // Check to see if user is logged in
@@ -31,6 +32,13 @@ function checkLoginStatus() {
   } else {
     $('.logged-in').html('You are not logged in')
   }
+}
+
+function showLanding() {
+  $('header h1').on('click', function() {
+    hideOtherDomElements();
+    $('.landing').prop('hidden', false);
+  });
 }
 
 // Get Trips
@@ -562,6 +570,7 @@ function init () {
   $(submitTripUpdates);
   $(handleClickLogin);
   $(userlogin);
+  $(showLanding);
 }
 
 $(init)

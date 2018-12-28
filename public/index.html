@@ -7,6 +7,8 @@
 	<title>Backpacker Database</title>
 	<link rel="stylesheet" type="text/css" href="./main.css">
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link rel="shortcut icon" href="../screenshots/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="../screenshots/favicon.ico" type="image/x-icon">
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 <body>
@@ -49,7 +51,19 @@
 		<div class="post-trip-button nav-item">Post my own Trip</div>
 	</nav>
 	<main role="main">
-		<section role="region" class="recent-trips">
+		<section role="region" class="landing">
+			<h1>Welcome to Backpacker Database</h1>
+			<h2>Backpacker Database is the best place for outdoor enthusiasts to discover their next great backpacking trip.</h2>
+
+			<p>Search trips by multiple different features including distance, number of days and nights, difficulty rating, or whatever else you're looking for!</p>
+			<img class="screenshot" src="../screenshots/search-view.png" alt="search view">
+			<p>Contribute your own great trips for others to discover.</p>
+			<img class="screenshot" src="../screenshots/post-view.png" alt="post view">
+			<p>Want to try it out? Take a look around with the Demo Account below:</p>
+			<p class="demo">Username: TNorgay</p>
+			<p class="demo">Password: passwordpassword</p>
+		</section>
+		<section role="region" class="recent-trips" hidden>
 			<h2>Check out recent backpacking trips users have posted</h2>
 			<section class="recent-trips-results"></section>	
 		</section>
@@ -121,6 +135,7 @@
 				<div>
 					<label for="post-long-and-lat">Longitude and Latitude:</label><br>
 				    <input id="post-long-and-lat" type="text" required><br>
+				    <p class="longlat-hint">For example: 27.9881° N, 86.9250° E </p>
 				</div>				
 				<div>	
 				    <label for="post-nights">Number of nights:</label><br>
