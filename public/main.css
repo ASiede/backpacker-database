@@ -7,7 +7,7 @@
 body {
 	background-color: rgba(10, 122, 166, 1);
 	margin:0px;
-	background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Moraine_Lake_17092005.jpg/1024px-Moraine_Lake_17092005.jpg');
+	background-image: url('../screenshots/lake.jpg');
 	background-repeat: no-repeat;
 	background-size: cover;
 	min-height: 100vh;
