@@ -9,23 +9,23 @@ An app where users can contribute, view, and search for backcountry backpacking 
 ## Screenshots
 Landing View
 
-![Landing View](screenshots/landing-view.png)
+![Landing View](public/screenshots/landing-view.png)
 
 Trip Details
 
-![Trip Details](screenshots/details-view.png)
+![Trip Details](public/screenshots/details-view.png)
 
 Searching Trips
 
-![Searching Trips](screenshots/search-view.png)
+![Searching Trips](public/screenshots/search-view.png)
 
 Posting Trips
 
-![Posting Trips](screenshots/post-view.png)
+![Posting Trips](public/screenshots/post-view.png)
 
 Mobile Landing View
 
-![Mobile Landing View](screenshots/mobile-view.png)
+![Mobile Landing View](public/screenshots/mobile-view.png)
 
 
 ## API Documentation
